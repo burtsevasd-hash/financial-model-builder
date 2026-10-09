@@ -1,0 +1,11 @@
+{
+  "name": "financial-model-builder",
+  "displayName": "Financial Model Builder",
+  "description": "Build a complete financial model for a small business, from the client brief to handover: project passport, parameters, market research with sources, a formula-driven spreadsheet model, scenarios and sensitivity analysis, a single-file interactive model, an analytical note, a deck and a meeting script. Works in any language and any tax jurisdiction.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Sophya Burtseva"
+  },
+  "homepage": "https://github.com/burtsevasd-hash/financial-model-builder",
+  "repository": "https://github.com/burtsevasd-hash/financial-model-builder"
+}

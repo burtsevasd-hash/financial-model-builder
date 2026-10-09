@@ -1,0 +1,15 @@
+{
+  "name": "finance-tools",
+  "description": "Tools for financial analysts who build models for small business clients",
+  "owner": {
+    "name": "Sophya Burtseva"
+  },
+  "plugins": [
+    {
+      "name": "financial-model-builder",
+      "source": "./",
+      "description": "A full workflow for building a financial model for a small business, from the client brief to handover",
+      "keywords": ["finance", "financial-model", "feasibility", "cash-flow", "payback", "unit-economics", "small-business", "consulting"]
+    }
+  ]
+}

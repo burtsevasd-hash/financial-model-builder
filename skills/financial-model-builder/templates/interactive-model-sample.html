@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Финмодель пекарни · Казань</title>
+<style>
+:root{
+  --bg:#080b11; --bg2:#0d1219; --panel:#111823; --panel2:#152030;
+  --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.16);
+  --tx:#e8eef5; --tx2:#a9b7c7; --tx3:#8b9aad; --cap:#c3cfdb;
+  --cy:#2fd4e8; --cy2:#7ae7f5; --cydim:rgba(47,212,232,.14);
+  --pos:#4ade80; --neg:#f87171; --warn:#fbbf24;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font:15px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1280px;margin:0 auto;padding:0 24px}
+h1,h2,h3,.mono{font-family:var(--mono)}
+a{color:var(--cy)}
+
+/* ---------- шапка ---------- */
+.top{border-bottom:1px solid var(--line);background:linear-gradient(180deg,#0b1017,#080b11);position:sticky;top:0;z-index:40;backdrop-filter:blur(8px)}
+.top-in{display:flex;align-items:center;gap:28px;padding:16px 24px;max-width:1280px;margin:0 auto;flex-wrap:wrap}
+.brand{font-family:var(--mono);font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--cy)}
+.brand b{display:block;font-size:17px;letter-spacing:.06em;color:var(--tx);font-weight:700;margin-top:3px}
+.top-meta{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;color:var(--tx3);text-transform:uppercase;line-height:1.7}
+.tabs{display:flex;gap:4px;margin-left:auto;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px}
+.tab{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--tx2);
+  background:none;border:0;padding:9px 16px;border-radius:9px;cursor:pointer;transition:.15s}
+.tab:hover{color:var(--tx)}
+.tab[aria-selected="true"]{background:var(--cydim);color:var(--cy2);box-shadow:inset 0 0 0 1px rgba(47,212,232,.28)}
+
+/* ---------- общее ---------- */
+section{padding:30px 0 8px}
+.main-col section:first-child{padding-top:0}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--cy);margin:0 0 10px}
+h2.sec{font-size:21px;letter-spacing:.02em;margin:0 0 6px;font-weight:700}
+.sec-note{color:var(--cap);font-size:14px;margin:0 0 20px;max-width:860px;line-height:1.6}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px}
+.grid{display:grid;gap:14px}
+.hr{height:1px;background:var(--line);margin:28px 0}
+
+/* ---------- сценарий ---------- */
+.scen{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.sbtn{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:9px 13px;flex:1;
+  border-radius:11px;border:1px solid var(--line2);background:var(--panel);color:var(--tx2);cursor:pointer;transition:.15s}
+.sbtn:hover{border-color:var(--cy);color:var(--tx)}
+.sbtn.on{background:var(--cy);border-color:var(--cy);color:#04232a;font-weight:700}
+.reset{width:100%;font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;
+  background:none;border:1px solid var(--line2);color:var(--tx2);padding:9px 15px;border-radius:10px;cursor:pointer}
+.reset:hover{color:var(--cy);border-color:var(--cy)}
+
+/* ---------- двухколоночная раскладка ---------- */
+.model-layout{display:grid;grid-template-columns:356px 1fr;gap:30px;align-items:start;padding-top:26px}
+.side{position:sticky;top:84px;max-height:calc(100vh - 104px);overflow-y:auto;padding-right:6px}
+.side::-webkit-scrollbar{width:7px}
+.side::-webkit-scrollbar-thumb{background:#223044;border-radius:4px}
+.side::-webkit-scrollbar-track{background:transparent}
+.side-sec{margin-bottom:22px}
+.side-sec .eyebrow{margin-bottom:9px}
+.side-hint{font-size:12px;color:var(--tx2);margin:0 0 11px;line-height:1.5}
+.main-col{min-width:0}
+@media(max-width:1100px){.model-layout{grid-template-columns:1fr;gap:10px}
+  .side{position:static;max-height:none;overflow:visible;padding-right:0}}
+
+/* ---------- счётчики штата ---------- */
+.stp{display:flex;align-items:center;gap:11px;background:var(--panel);border:1px solid var(--line);
+  border-radius:12px;padding:11px 13px;margin-bottom:9px}
+.stp.moved{border-color:rgba(47,212,232,.45)}
+.stp-t{flex:1;min-width:0}
+.stp-n{font-size:13px;font-weight:600;display:block}
+.stp-s{font-size:11.5px;color:var(--tx2);display:block;line-height:1.4;margin-top:2px}
+.stp-b{width:29px;height:29px;flex:none;border-radius:9px;border:1px solid var(--line2);background:var(--panel2);
+  color:var(--tx);font-size:17px;line-height:1;cursor:pointer;font-family:var(--mono)}
+.stp-b:hover:not(:disabled){border-color:var(--cy);color:var(--cy)}
+.stp-b:disabled{opacity:.3;cursor:default}
+.stp-v{font-family:var(--mono);font-size:17px;font-weight:700;color:var(--cy2);min-width:24px;text-align:center}
+
+/* ---------- движки ---------- */
+.sliders{display:block}
+.sl{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px 10px;margin-bottom:9px}
+.sl.moved{border-color:rgba(47,212,232,.45);box-shadow:0 0 0 1px rgba(47,212,232,.14)}
+.sl-h{display:flex;align-items:baseline;gap:10px;margin-bottom:3px}
+.sl-rank{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--cy);
+  border:1px solid rgba(47,212,232,.35);border-radius:5px;padding:1px 6px}
+.sl-name{font-size:13px;font-weight:600;flex:1}
+.sl-val{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--cy2);white-space:nowrap}
+.sl-sub{font-size:11.5px;color:var(--tx2);margin-bottom:9px;line-height:1.45}
+input[type=range]{-webkit-appearance:none;width:100%;height:4px;border-radius:3px;background:var(--panel2);outline:none;margin:4px 0 7px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;height:17px;border-radius:50%;
+  background:var(--cy);cursor:pointer;border:3px solid #0b1017;box-shadow:0 0 0 1px var(--cy)}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--cy);cursor:pointer;border:3px solid #0b1017}
+.sl-ends{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10.5px;color:var(--tx3);letter-spacing:.06em}
+.sl-base{color:var(--tx3);font-family:var(--mono);font-size:10.5px}
+
+/* ---------- показатели ---------- */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(258px,1fr));gap:12px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 17px}
+.kpi-l{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--tx3);margin-bottom:9px}
+.kpi-v{font-family:var(--mono);font-size:26px;font-weight:700;letter-spacing:-.01em;line-height:1.1}
+.kpi-u{font-size:13px;color:var(--tx2);font-weight:400;margin-left:4px}
+.kpi-d{font-size:12.5px;color:var(--cap);margin-top:9px;line-height:1.5}
+.kpi.ok .kpi-v{color:var(--pos)} .kpi.bad .kpi-v{color:var(--neg)} .kpi.warn .kpi-v{color:var(--warn)}
+.kpi.hi{border-color:rgba(47,212,232,.3);background:linear-gradient(180deg,rgba(47,212,232,.06),transparent)}
+.delta{font-family:var(--mono);font-size:11.5px;margin-top:7px}
+.delta.up{color:var(--pos)} .delta.dn{color:var(--neg)} .delta.same{color:var(--tx3)}
+
+/* ---------- графики ---------- */
+.charts{display:grid;grid-template-columns:1.45fr 1fr;gap:14px}
+@media(max-width:980px){.charts{grid-template-columns:1fr}}
+.chart{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:17px 19px}
+.chart h3{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--tx2);margin:0 0 3px;font-weight:600}
+.chart .ch-note{font-size:12.5px;color:var(--cap);margin:0 0 13px;line-height:1.5}
+svg{display:block;width:100%;overflow:visible}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:11px;color:var(--tx2);margin-top:11px}
+.legend i{display:inline-block;width:11px;height:3px;border-radius:2px;margin-right:6px;vertical-align:middle}
+
+/* ---------- таблицы ---------- */
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--tx3);
+  text-align:right;padding:11px 12px;border-bottom:1px solid var(--line2);font-weight:600;white-space:nowrap}
+th:first-child{text-align:left}
+td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:right;font-family:var(--mono);font-size:13px;white-space:nowrap}
+td:first-child{text-align:left;font-family:var(--sans);font-size:13.5px;color:var(--tx)}
+tr:last-child td{border-bottom:0}
+tr.total td{font-weight:700;color:var(--cy2);border-top:1px solid var(--line2)}
+.tbl-wrap{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:6px 18px}
+.neg{color:var(--neg)} .pos{color:var(--pos)}
+.toggle{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;background:none;
+  border:1px solid var(--line2);color:var(--tx2);padding:9px 15px;border-radius:10px;cursor:pointer;margin-top:14px}
+.toggle:hover{color:var(--cy);border-color:var(--cy)}
+
+/* ---------- запас прочности ---------- */
+.limits{display:grid;grid-template-columns:repeat(auto-fit,minmax(252px,1fr));gap:12px}
+.lim{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:15px 17px}
+.lim-n{font-size:14px;font-weight:600;margin-bottom:11px}
+.lim-bar{height:7px;border-radius:4px;background:var(--panel2);position:relative;overflow:hidden;margin:9px 0 7px}
+.lim-fill{position:absolute;top:0;bottom:0;border-radius:4px;background:linear-gradient(90deg,var(--cy),#1a9db0)}
+.lim-t{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11.5px}
+.lim-t b{color:var(--cy2)}
+.lim-x{font-size:12.5px;color:var(--cap);margin-top:8px;line-height:1.5}
+
+/* ---------- проверки ---------- */
+.checks{display:grid;grid-template-columns:repeat(auto-fit,minmax(248px,1fr));gap:10px}
+.chk{display:flex;align-items:flex-start;gap:11px;background:var(--panel);border:1px solid var(--line);
+  border-radius:12px;padding:13px 15px;font-size:13px}
+.dot{width:8px;height:8px;border-radius:50%;margin-top:6px;flex:none}
+.dot.g{background:var(--pos);box-shadow:0 0 9px rgba(74,222,128,.5)}
+.dot.r{background:var(--neg);box-shadow:0 0 9px rgba(248,113,113,.5)}
+.chk b{display:block;font-size:13px;font-weight:600;margin-bottom:2px}
+.chk span{color:var(--cap);font-size:12.5px;line-height:1.5}
+
+/* ---------- записка ---------- */
+.note{max-width:860px}
+.note h3{font-size:16px;letter-spacing:.02em;margin:30px 0 10px;color:var(--cy2)}
+.note p{color:var(--tx);margin:0 0 13px}
+.note ul{margin:0 0 14px;padding-left:19px;color:var(--tx)}
+.note li{margin-bottom:7px}
+.note .lead{font-size:17px;line-height:1.65}
+.num{font-family:var(--mono);color:var(--cy2);font-weight:700}
+.callout{border-left:2px solid var(--cy);background:rgba(47,212,232,.05);padding:14px 18px;border-radius:0 12px 12px 0;margin:18px 0}
+.callout p:last-child{margin-bottom:0}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin:26px 0 8px}
+.btn{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:11px 20px;border-radius:11px;
+  border:1px solid var(--cy);background:var(--cy);color:#04232a;font-weight:700;cursor:pointer}
+.btn.ghost{background:none;color:var(--cy)}
+.btn:hover{opacity:.88}
+
+/* ---------- решения на слайде ---------- */
+.decs{display:grid;gap:10px;margin-top:18px}
+.dec{display:grid;grid-template-columns:32px 1fr 220px;gap:15px;align-items:start;background:var(--panel2);
+  border:1px solid var(--line);border-left:2px solid var(--cy);border-radius:12px;padding:13px 16px}
+.dec-n{font-family:var(--mono);font-size:19px;font-weight:700;color:var(--cy);line-height:1.2}
+.dec-q{font-size:15px;font-weight:600;margin-bottom:4px}
+.dec-o{font-size:13px;color:var(--cap);line-height:1.5}
+.dec-p{font-family:var(--mono);font-size:12.5px;color:var(--cy2);text-align:right;line-height:1.6}
+.s-chart{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:16px 0}
+@media(max-width:900px){.dec{grid-template-columns:28px 1fr}.dec-p{grid-column:2;text-align:left;margin-top:6px}}
+
+/* ---------- презентация ---------- */
+.deck{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.slide{display:none;padding:52px 56px;min-height:460px}
+.slide.on{display:block}
+.slide .s-eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--cy);margin-bottom:16px}
+.slide h2{font-size:34px;line-height:1.2;margin:0 0 20px;font-weight:800;letter-spacing:-.01em}
+.slide p{font-size:17px;color:var(--tx);max-width:760px;margin:0 0 13px}
+.slide ul{font-size:16px;color:var(--tx);max-width:760px;padding-left:20px}
+.slide li{margin-bottom:9px}
+.big{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin:26px 0 8px}
+.big>div{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.big .bl{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--tx3);margin-bottom:8px}
+.big .bv{font-family:var(--mono);font-size:28px;font-weight:700;color:var(--cy2)}
+.deck-bar{display:flex;align-items:center;gap:14px;border-top:1px solid var(--line);padding:14px 22px;background:var(--bg2)}
+.deck-bar .nav{font-family:var(--mono);font-size:12px;color:var(--tx2);letter-spacing:.1em}
+.dots{display:flex;gap:6px;margin-left:auto}
+.dots b{width:7px;height:7px;border-radius:50%;background:var(--panel2);cursor:pointer;border:1px solid var(--line2)}
+.dots b.on{background:var(--cy);border-color:var(--cy)}
+.notes{background:var(--bg2);border-top:1px solid var(--line);padding:16px 56px;font-size:13.5px;color:var(--tx2)}
+.notes b{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--tx3);display:block;margin-bottom:6px}
+footer{padding:40px 0 60px;color:var(--tx3);font-size:12.5px;border-top:1px solid var(--line);margin-top:46px}
+[hidden]{display:none!important}
+@media print{
+  @page{margin:16mm 14mm}
+  .top,.tabs,.btnrow,.deck-bar,.side,footer,.toggle,.reset{display:none!important}
+  html,body{background:#fff!important;color:#15202b!important}
+  .wrap{max-width:none;padding:0}
+  .model-layout{display:block}
+  section{padding:0 0 6pt}
+  .note,.note p,.note li,.note ul,.note .lead,.sec-note,.kpi-d,.lim-x,.chk span,.ch-note,td,th{
+    color:#15202b!important}
+  .note .lead{font-size:12.5pt;line-height:1.5}
+  .note p,.note li{font-size:11pt;line-height:1.5}
+  .note h3{color:#0a4e58!important;font-size:13pt;margin:14pt 0 6pt;
+    border-bottom:.6pt solid #cfdce2;padding-bottom:3pt}
+  h2.sec{color:#0d1b26!important;font-size:18pt}
+  .eyebrow{color:#5b7683!important}
+  .num{color:#0a4e58!important;font-weight:700}
+  .callout{background:#eef8fa!important;border-left:2.5pt solid #0a4e58!important;
+    padding:9pt 12pt;margin:10pt 0;border-radius:0}
+  .panel,.kpi,.chart,.lim,.chk,.tbl-wrap{background:#fff!important;border:.6pt solid #cfdce2!important;
+    box-shadow:none!important}
+  .kpi-v{color:#0d1b26!important}.kpi.ok .kpi-v{color:#116b3a!important}
+  .kpi.bad .kpi-v{color:#9a1c1c!important}.kpi.warn .kpi-v{color:#8a5a00!important}
+  .kpi-l,.lim-t span,th{color:#5b7683!important}
+  .slide{display:block!important;page-break-after:always;padding:0 0 18pt;min-height:0}
+  .slide h2{color:#0d1b26!important;font-size:20pt}
+  .slide p,.slide li{color:#15202b!important;font-size:11pt}
+  .big>div{background:#f4f8fa!important;border:.6pt solid #cfdce2!important}
+  .big .bv{color:#0a4e58!important}.big .bl{color:#5b7683!important}
+  .notes{background:#f4f8fa!important;color:#15202b!important;border-top:.6pt solid #cfdce2}
+  .notes b{color:#5b7683!important}
+  .neg{color:#9a1c1c!important}.pos{color:#116b3a!important}
+  a{color:#0a4e58!important;text-decoration:none}
+}
+@media(max-width:720px){
+  .wrap{padding:0 15px}.slide{padding:32px 24px}.notes{padding:14px 24px}
+  .kpi-v{font-size:22px}.slide h2{font-size:25px}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <div class="brand">Финансовая модель
+      <b>Пекарня полного цикла · Казань</b>
+    </div>
+    <div class="top-meta">
+      Горизонт 36 месяцев, ноябрь 2026 – октябрь 2029<br>
+      Открытие в январе 2027 · модель от 09.10.2026
+    </div>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" aria-selected="true" data-tab="model">Модель</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="note">Записка</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="deck">Презентация</button>
+    </div>
+  </div>
+</header>
+<!-- ================= ВКЛАДКА: МОДЕЛЬ ================= -->
+<main id="tab-model">
+<div class="wrap model-layout">
+
+  <aside class="side">
+    <div class="side-sec">
+      <p class="eyebrow">Сценарий</p>
+      <div class="scen">
+        <button class="sbtn" data-scen="0">Пессим.</button>
+        <button class="sbtn on" data-scen="1">Базовый</button>
+        <button class="sbtn" data-scen="2">Оптим.</button>
+      </div>
+    </div>
+
+    <div class="side-sec">
+      <p class="eyebrow">Что можно подвигать</p>
+      <p class="side-hint">Восемь величин с самым сильным влиянием по анализу чувствительности. Ранг показывает силу влияния: первая двигает результат сильнее всех.</p>
+      <div class="sliders" id="sliders"></div>
+    </div>
+
+    <div class="side-sec">
+      <p class="eyebrow">Сколько людей в штате</p>
+      <p class="side-hint">От численности зависят фонд оплаты труда, взносы и то, закрываются ли смены при работе 13 часов без выходных.</p>
+      <div id="staff"></div>
+    </div>
+
+    <div class="side-sec">
+      <button class="reset" id="reset">Сбросить всё к плану</button>
+    </div>
+  </aside>
+
+  <div class="main-col">
+
+  <section>
+    <p class="eyebrow">Результат</p>
+    <h2 class="sec">Что получается при этих значениях</h2>
+    <p class="sec-note">Пересчитывается полностью: 36 месяцев, отчёт о прибылях и убытках, движение денег, налоги и кредит. Подпись под числом показывает отклонение от базового расчёта.</p>
+    <div class="kpis" id="kpis"></div>
+  </section>
+
+  <section>
+    <div class="charts">
+      <div class="chart">
+        <h3>Накопленный денежный поток проекта</h3>
+        <p class="ch-note">Без учёта кредита и взноса собственника. Проект окупается там, где линия пересекает ноль.</p>
+        <div id="ch-cum"></div>
+        <div class="legend">
+          <span><i style="background:#2fd4e8"></i>Накопленный поток</span>
+          <span><i style="background:#f87171"></i>Самое дно</span>
+          <span><i style="background:#4ade80"></i>Точка окупаемости</span>
+        </div>
+      </div>
+      <div class="chart">
+        <h3>Деньги на счёте по месяцам</h3>
+        <p class="ch-note">С учётом собственных средств и кредита. Пунктир это минимальный остаток, который вы хотите держать на счёте.</p>
+        <div id="ch-cash"></div>
+        <div class="legend">
+          <span><i style="background:#2fd4e8"></i>Остаток на счёте</span>
+          <span><i style="background:#fbbf24"></i>Минимальный остаток</span>
+          <span><i style="background:rgba(248,113,113,.55)"></i>Кассовый разрыв</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="charts">
+      <div class="chart">
+        <h3>Выручка и чистая прибыль по годам</h3>
+        <p class="ch-note">2026 и 2029 годы неполные: модель начинается в ноябре и заканчивается в октябре.</p>
+        <div id="ch-years"></div>
+        <div class="legend">
+          <span><i style="background:rgba(47,212,232,.45)"></i>Выручка без НДС</span>
+          <span><i style="background:#2fd4e8"></i>Чистая прибыль</span>
+        </div>
+      </div>
+      <div class="chart">
+        <h3>Куда уходит выручка второго года</h3>
+        <p class="ch-note">Доля каждой статьи в выручке 2028 года, первого полного года работы.</p>
+        <div id="ch-cost"></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="eyebrow">Запас прочности</p>
+    <h2 class="sec">Насколько можно ошибиться в каждой цифре</h2>
+    <p class="sec-note">Для каждого движка модель подбирает границу: насколько величина должна уйти в худшую сторону, чтобы проект перестал окупаться за 36 месяцев. Чем короче полоса, тем опаснее ошибка в этом параметре.</p>
+    <div class="limits" id="limits"></div>
+  </section>
+
+  <section>
+    <p class="eyebrow">Цифры</p>
+    <h2 class="sec">По годам</h2>
+    <div class="tbl-wrap"><table id="t-years"></table></div>
+    <button class="toggle" id="btn-months">Показать помесячно</button>
+    <div class="tbl-wrap" id="wrap-months" hidden style="margin-top:14px"><table id="t-months"></table></div>
+  </section>
+
+  <section>
+    <p class="eyebrow">Контроль</p>
+    <h2 class="sec">Проверки модели</h2>
+    <p class="sec-note">Модель сама себя проверяет при каждом пересчёте. Красная точка означает, что при текущих значениях условие нарушено.</p>
+    <div class="checks" id="checks"></div>
+  </section>
+
+  <div class="hr"></div>
+  <section style="padding-top:0">
+    <p class="eyebrow">Откуда цифры</p>
+    <h2 class="sec">Источники и допущения</h2>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">
+      <div class="panel" style="padding:17px 19px">
+        <div class="kpi-l">Данные клиента</div>
+        <p style="font-size:13.5px;color:var(--cap);margin:0;line-height:1.55">Аренда 100 000 руб., помещение 60 м², график с 8:00 до 21:00 без выходных, состав команды, собственные средства 2 млн руб., смета ремонта и оборудования, средний чек 250–300 руб.</p>
+      </div>
+      <div class="panel" style="padding:17px 19px">
+        <div class="kpi-l">Рыночное исследование</div>
+        <p style="font-size:13.5px;color:var(--cap);margin:0;line-height:1.55">Средний чек в пекарнях 259 руб. по данным касс, сезонность по научной публикации, комиссия Яндекс Еды 35% по оферте, тарифы Татэнергосбыта и Госкомитета РТ, ставки ЦБ по кредитам МСП, микрозайм фонда Татарстана 8%.</p>
+      </div>
+      <div class="panel" style="padding:17px 19px">
+        <div class="kpi-l">Расчёт по техкартам</div>
+        <p style="font-size:13.5px;color:var(--cap);margin:0;line-height:1.55">Доля сырья и упаковки 26,8% выручки получена из десяти типовых техкарт и цен Казани на 08.10.2026. В неё входят упаковка и списания 5% к расходу сырья.</p>
+      </div>
+      <div class="panel" style="padding:17px 19px">
+        <div class="kpi-l">Законодательство</div>
+        <p style="font-size:13.5px;color:var(--cap);margin:0;line-height:1.55">УСН «доходы минус расходы» 15% по закону Татарстана, минимальный налог 1%, взносы 30% до 1,5 МРОТ и 7,6% свыше, фиксированные взносы ИП 61 154 руб., порог НДС 20 млн руб. по статье 145 НК.</p>
+      </div>
+    </div>
+  </section>
+
+  </div>
+</div>
+</main>
+<!-- ================= ВКЛАДКА: ЗАПИСКА ================= -->
+<main id="tab-note" hidden>
+<div class="wrap">
+  <section class="note">
+    <p class="eyebrow">Аналитическая записка</p>
+    <h2 class="sec" style="font-size:27px">Стоит ли открывать пекарню у дома в Казани</h2>
+    <p class="sec-note" id="note-scen"></p>
+
+    <p class="lead">Вы планируете пекарню полного цикла на 60 м² в спальном районе Казани: хлеб, выпечка и кофе навынос, плюс доставка через агрегатор. Модель построена на 36 месяцев, с ноября 2026 года по октябрь 2029, открытие в январе 2027. Ниже ответы на три вопроса, с которыми вы пришли: сколько нужно вложить, когда вернутся деньги и какая будет прибыль.</p>
+
+    <h3>Сколько нужно денег</h3>
+    <p>Чтобы открыть точку и дожить до выхода на плановый поток, нужно <b class="num" data-k="need"></b> руб. Это смета запуска вместе с резервом, аренда и зарплата за два месяца до открытия, запас сырья и остаток на счёте, который вы хотите держать постоянно.</p>
+    <p>Ваши собственные <b class="num" data-k="equity"></b> руб. и кредит <b class="num" data-k="loan"></b> руб. дают <b class="num" data-k="fin"></b> руб. <span data-k="gapsentence"></span></p>
+    <div class="callout" id="gapbox"></div>
+
+    <h3>Когда вернутся вложения</h3>
+    <p><span data-k="paybacksentence"></span> Считаем по накопленному денежному потоку проекта: складываем все поступления и платежи, кроме кредита и вашего взноса, и смотрим, в каком месяце сумма выходит в плюс.</p>
+    <p>Самый тяжёлый месяц по деньгам это <b class="num" data-k="worstmonth"></b>, когда на счёте <b class="num" data-k="worstcash"></b> руб. Дальше остаток растёт.</p>
+
+    <h3>Какая будет прибыль</h3>
+    <p>Первый полный год работы это 2028-й. Выручка <b class="num" data-k="rev28"></b> руб., чистая прибыль <b class="num" data-k="np28"></b> руб., это <b class="num" data-k="npm28"></b> от выручки. За весь горизонт чистая прибыль <b class="num" data-k="npall"></b> руб., остаток денег на конец <b class="num" data-k="endcash"></b> руб.</p>
+    <p>Валовая прибыль держится около <b class="num" data-k="gm"></b> выручки. Самые крупные статьи расходов второго года: <span data-k="top3"></span>.</p>
+
+    <h3>Что в этих цифрах самое хрупкое</h3>
+    <p><span data-k="fragile"></span></p>
+    <ul>
+      <li>Трафик. Количество чеков в день это главный драйвер, и у него нет надёжного открытого источника. Опубликованные данные касс дают средний чек 259 руб. по пекарням России, а число чеков в пекарнях за первое полугодие 2026 года упало на 10% за год. Замер трафика по конкретному адресу обязателен до подписания аренды.</li>
+      <li>Себестоимость 26,8% получена по типовым техкартам, а не по вашим рецептурам, и держится на розничных ценах в верхней половине казанских диапазонов. Если придётся продавать дешевле на 10%, доля вырастает до 29,8%.</li>
+      <li>Вентиляция. Если в помещении нет готового канала под общепит, понадобится трасса по фасаду, а это решение общего собрания собственников дома и полтора месяца сроку.</li>
+      <li>Право на пониженные страховые взносы 7,6% нужно подтвердить в налоговой: оно требует доли дохода от производства не меньше 70% за предыдущий год.</li>
+    </ul>
+
+    <h3>Что сделать до решения</h3>
+    <ul>
+      <li>Посчитать чеки в трёх-пяти соседних пекарнях по часам в будни и в субботу.</li>
+      <li>Спросить арендодателя про вентиляционный канал и взять счета за коммунальные услуги прошлого арендатора за декабрь, январь и февраль.</li>
+      <li>Взять два коммерческих предложения на ремонт и три на вентиляцию.</li>
+      <li>Узнать в Фонде поддержки предпринимательства Татарстана условия микрозайма под 8% годовых и сумму, на которую можно рассчитывать.</li>
+      <li>Внести основной код ОКВЭД 10.71 в ЕГРИП до 1 января 2027 года.</li>
+    </ul>
+
+    <div class="btnrow">
+      <button class="btn" id="dl-doc">Скачать записку в Word</button>
+      <button class="btn ghost" id="pr-doc">Печать или PDF</button>
+    </div>
+    <p style="font-size:12.5px;color:var(--tx3)">Числа в записке живые: подвигайте движки на вкладке «Модель» и текст пересчитается.</p>
+  </section>
+</div>
+</main>
+
+<!-- ================= ВКЛАДКА: ПРЕЗЕНТАЦИЯ ================= -->
+<main id="tab-deck" hidden>
+<div class="wrap">
+  <section>
+    <div class="deck">
+      <div id="slides"></div>
+      <div class="deck-bar">
+        <button class="btn ghost" id="prev">Назад</button>
+        <button class="btn ghost" id="next">Вперёд</button>
+        <span class="nav" id="slidenum"></span>
+        <span class="nav" style="color:var(--tx3)">стрелки на клавиатуре работают</span>
+        <div class="dots" id="dots"></div>
+      </div>
+      <div class="notes"><b>Что сказать</b><span id="speaker"></span></div>
+    </div>
+    <div class="btnrow">
+      <button class="btn ghost" id="to-model">Вернуться к движкам</button>
+      <button class="btn ghost" id="pr-deck">Печать слайдов</button>
+    </div>
+  </section>
+</div>
+</main>
+
+<footer><div class="wrap">
+  Модель пересчитывается полностью в браузере: 36 месяцев, отчёт о прибылях и убытках, движение денег по трём видам деятельности, оборотный капитал, налоги и кредит. Источник расчёта это файл «Финмодель.xlsx», формулы перенесены строка в строку и сверены с ним до рубля.
+</div></footer>
+<script>
+const BASE={"horizon":36,"openMonth":3,"startYear":2026,"startMonth":11,"workDays":30,"deliveryShare":0.075,"cashlessShare":0.8,"ramp":[0.5,0.65,0.75,0.85,0.92,1],"season":[0.82,0.97,1.03,1.03,0.97,0.87,0.82,0.87,1.08,1.13,1.13,1.28],"idxPrice":0.07,"extraLoss":0,"aggrFee":0.35,"acqFee":0.0279,"idxRaw":0.045,"bakerPartnerN":1,"bakerPartnerPay":68966,"bakerPartnerStart":1,"baker2N":1,"baker2Pay":68966,"baker2Start":2,"sellerN":2,"sellerPay":51724,"sellerStart":2,"idxPay":0.068,"contrStd":0.3,"contrLow":0.076,"contrInjury":0.004,"mrot":28935,"mrotMult":1.5,"rent":100000,"rentStart":1,"rentFree":1,"util1":40000,"util2":38000,"util3":35000,"utilStart":2,"idxTariff":0.09,"marketing":20000,"marketingStart":3,"otherBefore":15000,"otherAfter":28000,"otherFullMonth":3,"repair":1050000,"repairPayMonth":2,"repairStart":3,"equip":1400000,"equipPayMonth":2,"equipLife":85,"equipStart":3,"startOther":135000,"startOtherPayMonth":2,"deposit":100000,"depositMonth":1,"startStock":82000,"startStockMonth":3,"reserve":0.15,"reserveMonth":2,"stockDays":7,"apDays":0,"arDays":1.5,"minCash":200000,"usnRate":0.15,"usnMin":0.01,"ndsRate":0.05,"ndsThr1":20000000,"ndsThr2":15000000,"ndsSwitchYear":2030,"ipFixed":61154,"ipFixedIdx":0.045,"ipExtraRate":0.01,"ipExtraThr":300000,"taxWriteoffYear":2027,"indexBaseYear":2027,"equityAmt":2000000,"equityMonth":1,"loanAmt":1000000,"loanMonth":2,"loanRate":0.08,"loanTerm":36,"loanFirstPay":3,"fundFee":0.01,"ownerPay":50000,"ownerPayStart":9,"discount":0.3,"dRent":0,"dSalary":0,"shopHours":13,"sellersPerShift":1,"hoursNorm":164};
+const SCEN=[
+ {n:"Пессимистичный",checksDay:100,avgCheck:250,rawShare:0.308},
+ {n:"Базовый",checksDay:140,avgCheck:280,rawShare:0.268},
+ {n:"Оптимистичный",checksDay:190,avgCheck:300,rawShare:0.245}];
+/* Движок финмодели пекарни. Построчный перенос листа «Финмодель». */
+function runModel(p){
+  const H=p.horizon|0, OPEN=p.openMonth|0, Y0=p.startYear, M0=p.startMonth;
+  const r={}; for(let k=7;k<=138;k++) r[k]=new Array(H+1).fill(0);
+  const year=new Array(H+1).fill(0), cmon=new Array(H+1).fill(0);
+  for(let m=1;m<=H;m++){const t=(M0-1)+(m-1); year[m]=Y0+Math.floor(t/12); cmon[m]=t%12+1;}
+  const B=p.indexBaseYear, idx=(rate,m)=>Math.pow(1+rate,Math.max(0,year[m]-B));
+  for(let m=1;m<=H;m++){
+    const cm=cmon[m];
+    r[11][m]=Math.max(0,m-OPEN+1); r[12][m]=r[11][m]>0?1:0;
+    r[17][m]=idx(p.idxPrice,m); r[18][m]=idx(p.idxRaw,m); r[19][m]=r[18][m];
+    r[20][m]=idx(p.idxTariff,m); r[21][m]=idx(p.idxPay,m);
+    r[22][m]=p.mrot*p.mrotMult*r[21][m];
+    r[23][m]=p.avgCheck*r[17][m];
+    r[24][m]=p.rawShare*r[18][m]/r[17][m];
+    r[25][m]=p.workDays;
+    r[26][m]=r[12][m]?p.ramp[Math.min(r[11][m],6)-1]:0;
+    r[27][m]=p.season[cm-1];
+    r[28][m]=p.deliveryShare; r[29][m]=1-r[28][m]; r[30][m]=p.cashlessShare;
+    r[32][m]=p.checksDay*r[26][m]*r[27][m]; r[33][m]=r[32][m]*r[25][m];
+    r[36][m]=r[33][m]*r[23][m];
+    r[34][m]=r[36][m]*r[29][m]; r[35][m]=r[36][m]*r[28][m];
+  }
+  const sumIf=(row,pred)=>{let s=0;for(let k=1;k<=H;k++) if(pred(k)) s+=r[row][k];return s;};
+  for(let m=1;m<=H;m++){
+    const y=year[m], cm=cmon[m];
+    r[105][m]=(m===p.loanMonth)?p.loanAmt:0;
+    r[106][m]=m>1?r[110][m-1]:0;
+    const i=p.loanRate/12;
+    const ann=i>0? p.loanAmt*i/(1-Math.pow(1+i,-p.loanTerm)) : p.loanAmt/p.loanTerm;
+    r[107][m]=(m>=p.loanFirstPay && m<p.loanFirstPay+p.loanTerm && r[106][m]>0)?Math.min(r[106][m]*(1+i),ann):0;
+    r[108][m]=-Math.min(r[107][m],r[106][m]*i);
+    r[109][m]=-Math.max(0,r[107][m]+r[108][m]);
+    r[110][m]=Math.max(0,r[106][m]+r[105][m]+r[109][m]);
+    r[111][m]=(m===p.loanMonth)?-p.loanAmt*p.fundFee:0;
+    r[64][m]=-r[108][m];
+    const thr=(y<p.ndsSwitchYear)?p.ndsThr1:p.ndsThr2;
+    const prevY=sumIf(36,k=>year[k]===y-1), curY=(()=>{let s=0;for(let k=1;k<m;k++) if(year[k]===y) s+=r[36][k];return s;})();
+    r[37][m]=(prevY>thr||curY>thr)?1:0;
+    r[38][m]=r[36][m]*r[37][m]*p.ndsRate/(1+p.ndsRate);
+    r[39][m]=r[36][m]-r[38][m];
+    r[40][m]=r[36][m]*r[24][m];
+    r[41][m]=r[39][m]-r[40][m];
+    r[42][m]=r[39][m]?r[41][m]/r[39][m]:0;
+    r[43][m]=r[36][m]*p.extraLoss;
+    r[44][m]=r[35][m]*p.aggrFee;
+    r[45][m]=r[34][m]*r[30][m]*p.acqFee;
+    r[46][m]=(m>=p.bakerPartnerStart)?p.bakerPartnerN:0;
+    r[47][m]=(m>=p.baker2Start)?p.baker2N:0;
+    r[48][m]=(m>=p.sellerStart)?p.sellerN:0;
+    r[49][m]=r[46][m]+r[47][m]+r[48][m];
+    const sal=s=>s*(1+p.dSalary);
+    r[50][m]=(r[46][m]*sal(p.bakerPartnerPay)+r[47][m]*sal(p.baker2Pay)+r[48][m]*sal(p.sellerPay))*r[21][m];
+    const contr=(n,s)=>{const g=sal(s)*r[21][m];return n*(Math.min(g,r[22][m])*p.contrStd+Math.max(0,g-r[22][m])*p.contrLow);};
+    r[51][m]=contr(r[46][m],p.bakerPartnerPay)+contr(r[47][m],p.baker2Pay)+contr(r[48][m],p.sellerPay);
+    r[52][m]=r[50][m]*p.contrInjury;
+    r[53][m]=(m>=p.rentStart+p.rentFree)?p.rent*(1+p.dRent):0;
+    const util=(cm>=11||cm<=3)?p.util1:((cm<=5||cm>=9)?p.util2:p.util3);
+    r[54][m]=(m>=p.utilStart)?util*r[20][m]:0;
+    r[55][m]=(m>=p.marketingStart)?p.marketing*r[19][m]:0;
+    r[56][m]=((m>=p.otherFullMonth)?p.otherAfter:p.otherBefore)*r[19][m];
+    r[57][m]=(m>=p.equipStart)?p.equip/p.equipLife:0;
+    r[58][m]=(m>=p.repairStart)?p.repair/(H-p.repairStart+1):0;
+    r[59][m]=(y>=p.taxWriteoffYear)?p.ipFixed*Math.pow(1+p.ipFixedIdx,y-p.taxWriteoffYear)/12:0;
+    r[97][m]=(m===p.repairPayMonth)?-p.repair:0;
+    r[98][m]=(m===p.equipPayMonth)?-p.equip:0;
+    r[99][m]=(m===p.startOtherPayMonth)?-p.startOther:0;
+    r[100][m]=(m===p.depositMonth)?-p.deposit:0;
+    r[101][m]=(m===p.reserveMonth)?-(p.repair+p.equip+p.startOther)*p.reserve:0;
+    r[65][m]=(y===p.taxWriteoffYear)?(p.equip+p.repair)/12:0;
+    let b=0; for(let k=1;k<=m;k++) if(year[k]===y){
+      let o=0; for(let q=50;q<=56;q++) o+=r[q][k];
+      b+=r[39][k]-r[40][k]-r[43][k]-r[44][k]-r[45][k]-o-r[64][k]-r[65][k]+r[99][k];
+    }
+    let prevX=0; for(let k=1;k<m;k++) if(year[k]===y) prevX+=r[60][k];
+    r[60][m]=Math.max(0,Math.max(0,b-p.ipExtraThr)*p.ipExtraRate-prevX);
+    let s1=r[43][m]+r[44][m]+r[45][m], s2=0; for(let q=50;q<=58;q++) s2+=r[q][m];
+    r[61][m]=s1+s2+r[59][m]+r[60][m];
+    r[62][m]=r[41][m]-r[61][m];
+    r[63][m]=r[39][m]?r[62][m]/r[39][m]:0;
+    let s3=0; for(let q=50;q<=56;q++) s3+=r[q][m];
+    r[66][m]=r[40][m]+s1+s3+r[59][m]+r[60][m]+r[64][m]+r[65][m]-r[99][m];
+    r[67][m]=r[39][m]-r[66][m];
+    let cb=0,cr=0; for(let k=1;k<=m;k++) if(year[k]===y){cb+=r[67][k];cr+=r[39][k];}
+    const reg=Math.max(0,cb)*p.usnRate;
+    const tax=(cm===12)?Math.max(reg,cr*p.usnMin):reg;
+    let paid=0; for(let k=1;k<m;k++) if(year[k]===y) paid+=r[68][k];
+    r[68][m]=tax-paid;
+    r[69][m]=r[62][m]-r[64][m]-r[68][m];
+    r[71][m]=m>1?r[72][m-1]:0;
+    const st=r[40][m]/r[25][m]*p.stockDays;
+    r[72][m]=(m<p.startStockMonth)?0:((m===p.startStockMonth)?Math.max(p.startStock,st):st);
+    r[73][m]=r[72][m]-r[71][m];
+    r[74][m]=m>1?r[75][m-1]:0;
+    r[75][m]=(r[34][m]*r[30][m]+r[35][m])/r[25][m]*p.arDays;
+    r[76][m]=r[75][m]-r[74][m];
+    r[77][m]=r[40][m]+r[43][m]+r[73][m];
+    r[78][m]=m>1?r[79][m-1]:0;
+    r[79][m]=Math.max(0,r[77][m])/r[25][m]*p.apDays;
+    r[80][m]=r[79][m]-r[78][m];
+    r[81][m]=r[72][m]+r[75][m]-r[79][m];
+    r[82][m]=r[81][m]-(m>1?r[81][m-1]:0);
+    r[84][m]=r[36][m]-r[76][m]; r[85][m]=-(r[77][m]-r[80][m]);
+    r[86][m]=-(r[44][m]+r[45][m]); r[87][m]=-(r[50][m]+r[51][m]+r[52][m]);
+    r[88][m]=-r[53][m]; r[89][m]=-r[54][m]; r[90][m]=-r[55][m]; r[91][m]=-r[56][m];
+    const pm=(y*12+cm-1)-((cm-1)%3)-1;
+    let v=0; for(let k=1;k<=H;k++){const id=year[k]*12+cmon[k]-1; if(id===pm||id===pm-1||id===pm-2) v+=r[38][k];}
+    r[92][m]=-v/3;
+    let u=0;
+    const key=k=>year[k]*100+cmon[k];
+    if(cm===4){for(let k=1;k<=H;k++) if(key(k)>=(y-1)*100+10 && key(k)<y*100+4) u+=r[68][k];}
+    else if(cm===7){for(let k=1;k<=H;k++) if(key(k)>=y*100+4 && key(k)<y*100+7) u+=r[68][k];}
+    else if(cm===10){for(let k=1;k<=H;k++) if(key(k)>=y*100+7 && key(k)<y*100+10) u+=r[68][k];}
+    r[93][m]=-u;
+    const f=(cm===12)?sumIf(59,k=>year[k]===y):0;
+    const e=(cm===7)?sumIf(60,k=>year[k]===y-1):0;
+    r[94][m]=-(f+e);
+    let op=0; for(let q=84;q<=94;q++) op+=r[q][m]; r[95][m]=op;
+    let inv=0; for(let q=97;q<=101;q++) inv+=r[q][m]; r[102][m]=inv;
+    r[104][m]=(m===p.equityMonth)?p.equityAmt:0;
+    r[116][m]=m>1?r[117][m-1]:0;
+    r[112][m]=r[116][m]+r[95][m]+r[102][m]+r[104][m]+r[105][m]+r[108][m]+r[109][m]+r[111][m];
+    r[113][m]=(m>=p.ownerPayStart && r[112][m]-p.ownerPay>=p.minCash)?-p.ownerPay:0;
+    r[114][m]=r[104][m]+r[105][m]+r[108][m]+r[109][m]+r[111][m]+r[113][m];
+    r[115][m]=r[95][m]+r[102][m]+r[114][m];
+    r[117][m]=r[116][m]+r[115][m];
+    r[118][m]=Math.max(0,p.minCash-r[117][m]);
+    r[120][m]=r[95][m]+r[102][m];
+    r[121][m]=(m>1?r[121][m-1]:0)+r[120][m];
+    if(m===H){let acc=0;for(let k=1;k<=m;k++) acc+=r[57][k];
+      r[122][m]=Math.max(0,p.equip-acc); r[123][m]=p.deposit; r[124][m]=Math.max(0,r[81][m]);}
+    r[125][m]=r[122][m]+r[123][m]+r[124][m];
+    r[126][m]=r[120][m]+r[125][m];
+    r[127][m]=Math.max(0,p.minCash-r[121][m]);
+    r[134][m]=r[12][m]*p.shopHours*r[25][m]*p.sellersPerShift;
+    r[135][m]=r[48][m]*p.hoursNorm;
+    r[136][m]=Math.max(0,r[134][m]-r[135][m]); r[137][m]=r[136][m]/p.hoursNorm;
+  }
+  return {r,year,cmon,H};
+}
+if(typeof module!=="undefined") module.exports={runModel};
+/* ====================== утилиты ====================== */
+const MN=["январь","февраль","март","апрель","май","июнь","июль","август","сентябрь","октябрь","ноябрь","декабрь"];
+const MN2=["янв","фев","мар","апр","май","июн","июл","авг","сен","окт","ноя","дек"];
+const sp=n=>n.toString().replace(/\B(?=(\d{3})+(?!\d))/g," ");
+function fmt(n){const s=n<0?"−":"";return s+sp(Math.round(Math.abs(n)));}
+function fmtS(n){const a=Math.abs(n),s=n<0?"−":"";
+  if(a>=1e6) return s+(a/1e6).toFixed(a>=1e7?1:2).replace(".",",")+" млн";
+  if(a>=1e3) return s+sp(Math.round(a/1e3))+" тыс.";
+  return s+Math.round(a);}
+function pct(x,d){return (x*100).toFixed(d===undefined?1:d).replace(".",",")+"%";}
+function monthLabel(m){const t=10+(m-1);return MN[t%12]+" "+(2026+Math.floor(t/12));}
+function monthShort(m){const t=10+(m-1);return MN2[t%12]+" "+String(2026+Math.floor(t/12)).slice(2);}
+const dot=t=>t.trim().endsWith(".")?t:t+".";
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
+
+/* ====================== движки ====================== */
+const SLIDERS=[
+ {k:"checksDay",rank:1,name:"Чеки в день",unit:"чеков",lo:-0.45,hi:0.45,step:1,
+  sub:"Сколько покупок в день на плановом уровне. Главный драйвер выручки.",
+  fmtv:v=>Math.round(v)},
+ {k:"avgCheck",rank:2,name:"Средний чек",unit:"руб.",lo:-0.3,hi:0.3,step:5,
+  sub:"Средняя сумма одной покупки. По данным касс в пекарнях России это 259 руб.",
+  fmtv:v=>Math.round(v)},
+ {k:"rawShare",rank:3,name:"Сырьё и упаковка",unit:"% выручки",lo:-0.25,hi:0.35,step:0.001,bad:1,
+  sub:"Доля выручки на продукты и упаковку. Посчитана по техкартам.",
+  fmtv:v=>pct(v)},
+ {k:"rent",rank:4,name:"Арендная плата",unit:"руб. в месяц",lo:-0.4,hi:0.5,step:1000,bad:1,
+  sub:"Ставка по договору. Коммунальные услуги считаются отдельно.",
+  fmtv:v=>fmt(v)},
+ {k:"dSalary",rank:5,name:"Оклады персонала",unit:"к плану",lo:-0.25,hi:0.4,step:0.01,bad:1,abs:1,
+  sub:"Сдвиг всех окладов. План: пекарь 68 966 руб., продавец 51 724 руб. к начислению.",
+  fmtv:v=>(v>=0?"+":"−")+pct(Math.abs(v),0)},
+ {k:"deliveryShare",rank:6,name:"Доля доставки",unit:"% выручки",lo:-1,hi:2,step:0.005,
+  sub:"Часть выручки через агрегатор. С неё удерживается комиссия 35%.",
+  fmtv:v=>pct(v)},
+ {k:"capex",rank:7,name:"Смета запуска",unit:"руб.",lo:-0.3,hi:0.5,step:0.01,bad:1,
+  sub:"Ремонт, оборудование и прочие расходы на запуск вместе. Резерв 15% считается сверху.",
+  fmtv:v=>fmt(v)},
+ {k:"loanAmt",rank:8,name:"Сумма кредита",unit:"руб.",lo:-1,hi:2,step:50000,
+  sub:"Микрозайм фонда Татарстана под 8% годовых на 36 месяцев.",
+  fmtv:v=>fmt(v)}
+];
+let scen=1, over={}, capexBase=0;
+
+function scenBase(){
+  const s=SCEN[scen];
+  return {checksDay:s.checksDay,avgCheck:s.avgCheck,rawShare:s.rawShare,
+    rent:BASE.rent,dSalary:0,deliveryShare:BASE.deliveryShare,
+    capex:BASE.repair+BASE.equip+BASE.startOther,loanAmt:BASE.loanAmt,
+    bakers:BASE.bakerPartnerN+BASE.baker2N,sellers:BASE.sellerN};
+}
+function cur(k){const b=scenBase();return (k in over)?over[k]:b[k];}
+function buildParams(ov){
+  const b=scenBase(), g=k=>(ov&&k in ov)?ov[k]:cur(k);
+  const p=Object.assign({},BASE);
+  p.checksDay=g("checksDay"); p.avgCheck=g("avgCheck"); p.rawShare=g("rawShare");
+  p.rent=g("rent"); p.dSalary=g("dSalary"); p.deliveryShare=g("deliveryShare");
+  p.loanAmt=g("loanAmt"); p.dRent=0;
+  p.bakerPartnerN=1; p.baker2N=Math.max(0,g("bakers")-1); p.sellerN=g("sellers");
+  const base=BASE.repair+BASE.equip+BASE.startOther, mul=g("capex")/base;
+  p.repair=BASE.repair*mul; p.equip=BASE.equip*mul; p.startOther=BASE.startOther*mul;
+  return p;
+}
+
+/* ====================== производные показатели ====================== */
+function metrics(res){
+  const {r,year,H}=res;
+  const yrs=[2026,2027,2028,2029];
+  const Y=f=>{const o={};yrs.forEach(y=>o[y]=0);for(let m=1;m<=H;m++)o[year[m]]+=f(m);return o;};
+  const rev=Y(m=>r[39][m]), gp=Y(m=>r[41][m]), op=Y(m=>r[62][m]), np=Y(m=>r[69][m]),
+        cf=Y(m=>r[115][m]), tax=Y(m=>r[68][m]);
+  const endCash={};yrs.forEach(y=>{for(let m=1;m<=H;m++) if(year[m]===y) endCash[y]=r[117][m];});
+  let need=0,defc=0,pay=0,worst=1;
+  for(let m=1;m<=H;m++){
+    need=Math.max(need,r[127][m]); defc=Math.max(defc,r[118][m]);
+    if(!pay && r[121][m]>=0 && (m===1?0:r[121][m-1])<0) pay=m;
+    if(r[117][m]<r[117][worst]) worst=m;
+  }
+  return {rev,gp,op,np,cf,tax,endCash,need,defc,pay,worst,
+    endTotal:r[117][H], npTotal:Object.values(np).reduce((a,b)=>a+b,0),
+    sellerGap:Math.max(...r[137].slice(1)), r,year,H};
+}
+function paybackOf(ov){
+  const mt=metrics(runModel(buildParams(ov)));
+  return mt.pay;
+}
+/* граница: на сколько процентов величина может уйти в плохую сторону до потери окупаемости */
+function limitOf(s){
+  const b=scenBase()[s.k], dir=s.bad?1:-1;
+  if(!paybackOf({})) return null;
+  let lo=0, hi=0.5;
+  const test=t=>{
+    const v=s.abs? b+dir*t : b*(1+dir*t);
+    return !!paybackOf({[s.k]:v});
+  };
+  if(test(hi)) return {t:hi,capped:true};
+  for(let i=0;i<18;i++){const mid=(lo+hi)/2; if(test(mid)) lo=mid; else hi=mid;}
+  return {t:lo,capped:false};
+}
+
+/* ====================== отрисовка ====================== */
+function drawSliders(){
+  const box=document.getElementById("sliders"); box.innerHTML="";
+  SLIDERS.forEach(s=>{
+    const b=scenBase()[s.k], v=cur(s.k);
+    const min=s.abs? b+s.lo : b*(1+s.lo), max=s.abs? b+s.hi : b*(1+s.hi);
+    const d=el("div","sl"+(Math.abs(v-b)>1e-9?" moved":""));
+    d.innerHTML=`<div class="sl-h"><span class="sl-rank">${s.rank}</span>
+      <span class="sl-name">${s.name}</span><span class="sl-val">${s.fmtv(v)}</span></div>
+      <div class="sl-sub">${s.sub}</div>
+      <input type="range" min="${min}" max="${max}" step="${s.step}" value="${v}" data-k="${s.k}">
+      <div class="sl-ends"><span>${s.fmtv(min)}</span>
+        <span class="sl-base">план ${s.fmtv(b)}</span><span>${s.fmtv(max)}</span></div>`;
+    box.appendChild(d);
+    d.querySelector("input").addEventListener("input",e=>{
+      over[s.k]=parseFloat(e.target.value);
+      d.querySelector(".sl-val").textContent=s.fmtv(over[s.k]);
+      d.classList.toggle("moved",Math.abs(over[s.k]-b)>1e-9);
+      recalc(true);
+    });
+  });
+}
+const STAFF=[
+ {k:"bakers",n:"Пекари",min:1,max:5,s:"Один из них партнёр. Оклад к начислению 68 966 руб."},
+ {k:"sellers",n:"Продавцы-бариста",min:1,max:5,s:"Оклад к начислению 51 724 руб. Двое не закрывают 13 часов работы."}];
+function drawStaff(){
+  const box=document.getElementById("staff"); box.innerHTML="";
+  STAFF.forEach(st=>{
+    const b=scenBase()[st.k], v=cur(st.k);
+    const d=el("div","stp"+(v!==b?" moved":""));
+    d.innerHTML=`<div class="stp-t"><span class="stp-n">${st.n}</span><span class="stp-s">${st.s}</span></div>
+      <button class="stp-b" data-d="-1" ${v<=st.min?"disabled":""}>−</button>
+      <span class="stp-v">${v}</span>
+      <button class="stp-b" data-d="1" ${v>=st.max?"disabled":""}>+</button>`;
+    box.appendChild(d);
+    d.querySelectorAll(".stp-b").forEach(btn=>btn.addEventListener("click",()=>{
+      const nv=Math.max(st.min,Math.min(st.max,cur(st.k)+(+btn.dataset.d)));
+      over[st.k]=nv; drawStaff(); recalc();
+    }));
+  });
+}
+function kpiCard(l,v,u,d,cls,delta){
+  return `<div class="kpi ${cls||""}"><div class="kpi-l">${l}</div>
+    <div class="kpi-v">${v}<span class="kpi-u">${u||""}</span></div>
+    ${delta||""}<div class="kpi-d">${d}</div></div>`;
+}
+let baseMt=null;
+function deltaTag(now,was,inv){
+  if(was===undefined||was===null) return "";
+  const d=now-was;
+  if(Math.abs(d)<1) return `<div class="delta same">как в базовом расчёте</div>`;
+  const good=inv? d<0 : d>0;
+  return `<div class="delta ${good?"up":"dn"}">${d>0?"+":"−"}${fmtS(Math.abs(d))} руб. к базовому</div>`;
+}
+function drawKpis(mt){
+  const fin=cur("loanAmt")+BASE.equityAmt;
+  const ok=mt.defc<1;
+  document.getElementById("kpis").innerHTML=
+    kpiCard("Потребность в инвестициях",fmtS(mt.need),"руб.",
+      "Пик нехватки денег по месячному расчёту, включая минимальный остаток на счёте.","hi",
+      deltaTag(mt.need,baseMt&&baseMt.need,true))+
+    kpiCard("Окупаемость",mt.pay?mt.pay+"-й":"нет","месяц",
+      mt.pay?("Накопленный поток выходит в плюс в "+monthLabel(mt.pay)+", это "+(mt.pay-2)+"-й месяц работы."):
+      "За 36 месяцев накопленный поток в плюс не выходит.",mt.pay?"ok":"bad")+
+    kpiCard("Чистая прибыль 2028",fmtS(mt.np[2028]),"руб.",
+      "Первый полный год работы. Рентабельность "+pct(mt.rev[2028]?mt.np[2028]/mt.rev[2028]:0)+" от выручки.",
+      mt.np[2028]>0?"ok":"bad",deltaTag(mt.np[2028],baseMt&&baseMt.np[2028]))+
+    kpiCard("Деньги на конец горизонта",fmtS(mt.endTotal),"руб.",
+      "Остаток на счёте в октябре 2029 года после всех выплат и погашения кредита.",
+      mt.endTotal>0?"ok":"bad",deltaTag(mt.endTotal,baseMt&&baseMt.endTotal))+
+    kpiCard("Финансирование",ok?"Хватает":"Не хватает",ok?"":"",
+      ok?("Собственные "+fmtS(BASE.equityAmt)+" руб. и заёмные "+fmtS(cur("loanAmt"))+" руб. покрывают потребность."):
+         ("Не хватает "+fmt(mt.defc)+" руб. при собственных "+fmtS(BASE.equityAmt)+" руб. и кредите "+fmtS(cur("loanAmt"))+" руб."),
+      ok?"ok":"bad")+
+    kpiCard("Смены продавцов",mt.sellerGap<0.001?"Закрыты":"Не закрыты","",
+      mt.sellerGap<0.001?("Продавцов "+cur("sellers")+", они закрывают 13 часов работы по норме рабочего времени."):
+      ("Не хватает "+mt.sellerGap.toFixed(2).replace(".",",")+" ставки. Добавьте продавца в панели слева и посмотрите, как изменится прибыль."),
+      mt.sellerGap<0.001?"ok":"warn");
+}
+/* --- svg-графики --- */
+function svgLineHTML(vals,opt){
+  const W=760,Hh=opt.h||210,PL=58,PR=14,PT=14,PB=26;
+  const mn=Math.min(0,...vals), mx=Math.max(0,...vals), rng=(mx-mn)||1;
+  const X=i=>PL+i*(W-PL-PR)/(vals.length-1);
+  const Yc=v=>PT+(mx-v)/rng*(Hh-PT-PB);
+  let d="",area="";
+  vals.forEach((v,i)=>{d+=(i?"L":"M")+X(i).toFixed(1)+" "+Yc(v).toFixed(1)+" ";});
+  area=d+"L"+X(vals.length-1).toFixed(1)+" "+Yc(0)+" L"+X(0)+" "+Yc(0)+" Z";
+  let ticks="";
+  for(let i=0;i<=4;i++){const v=mn+rng*i/4,y=Yc(v);
+    ticks+=`<line x1="${PL}" y1="${y}" x2="${W-PR}" y2="${y}" stroke="rgba(255,255,255,.055)"/>
+      <text x="${PL-9}" y="${y+4}" text-anchor="end" fill="#6b7a8d" font-size="10" font-family="ui-monospace,monospace">${fmtS(v)}</text>`;}
+  let xl="";
+  for(let i=0;i<vals.length;i+=6){xl+=`<text x="${X(i)}" y="${Hh-7}" text-anchor="middle" fill="#6b7a8d" font-size="10" font-family="ui-monospace,monospace">${monthShort(i+1)}</text>`;}
+  let extra=opt.extra?opt.extra(X,Yc,vals):"";
+  return `<svg viewBox="0 0 ${W} ${Hh}" preserveAspectRatio="none" style="height:${Hh}px">
+     ${ticks}<line x1="${PL}" y1="${Yc(0)}" x2="${W-PR}" y2="${Yc(0)}" stroke="rgba(255,255,255,.3)" stroke-dasharray="3 3"/>
+     <path d="${area}" fill="${opt.fill||"rgba(47,212,232,.1)"}"/>
+     <path d="${d}" fill="none" stroke="${opt.stroke||"#2fd4e8"}" stroke-width="2" stroke-linejoin="round"/>
+     ${extra}${xl}</svg>`;
+}
+function svgLine(id,vals,opt){document.getElementById(id).innerHTML=svgLineHTML(vals,opt);}
+function cumChartHTML(mt,h){
+  const {r,H}=mt;
+  const cum=[];for(let m=1;m<=H;m++)cum.push(r[121][m]);
+  return svgLineHTML(cum,{h:h||220,extra:(X,Y,v)=>{
+    let s="";
+    if(mt.pay){const i=mt.pay-1;
+      s+=`<line x1="${X(i)}" y1="10" x2="${X(i)}" y2="${Y(Math.min(...v))}" stroke="#4ade80" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <circle cx="${X(i)}" cy="${Y(v[i])}" r="5" fill="#4ade80"/>
+          <text x="${X(i)+9}" y="${Y(v[i])-9}" fill="#4ade80" font-size="11" font-family="ui-monospace,monospace">окупаемость, ${monthShort(mt.pay)}</text>`;}
+    const mi=v.indexOf(Math.min(...v));
+    const lx=Math.min(X(mi)+9,560), ly=Y(v[mi])-11;
+    s+=`<circle cx="${X(mi)}" cy="${Y(v[mi])}" r="4" fill="#f87171"/>
+        <text x="${lx}" y="${ly}" fill="#f87171" font-size="11" font-family="ui-monospace,monospace">дно ${fmtS(v[mi])} руб.</text>`;
+    return s;}});
+}
+function cashChartHTML(mt,h){
+  const {r,H}=mt;
+  const cash=[];for(let m=1;m<=H;m++)cash.push(r[117][m]);
+  return svgLineHTML(cash,{h:h||220,fill:"rgba(47,212,232,.08)",extra:(X,Y,v)=>{
+    const mc=BASE.minCash;let s=`<line x1="58" y1="${Y(mc)}" x2="746" y2="${Y(mc)}" stroke="#fbbf24" stroke-width="1" stroke-dasharray="5 4"/>`;
+    let seg=null;
+    v.forEach((x,i)=>{if(x<0&&seg===null)seg=i;if((x>=0||i===v.length-1)&&seg!==null){
+      s+=`<rect x="${X(seg)}" y="10" width="${Math.max(2,X(i)-X(seg))}" height="${Y(Math.min(...v))-10}" fill="rgba(248,113,113,.11)"/>`;seg=null;}});
+    return s;}});
+}
+function drawCharts(mt){
+  const {r,H}=mt;
+  document.getElementById("ch-cum").innerHTML=cumChartHTML(mt,220);
+  document.getElementById("ch-cash").innerHTML=cashChartHTML(mt,220);
+  // годы
+  const yrs=[2026,2027,2028,2029],W=760,Hh=220,PL=58,PB=28;
+  const mx=Math.max(...yrs.map(y=>Math.max(mt.rev[y],mt.np[y]))),mn=Math.min(0,...yrs.map(y=>mt.np[y]));
+  const rng=(mx-mn)||1, bw=(W-PL-20)/yrs.length;
+  const Yc=v=>14+(mx-v)/rng*(Hh-14-PB);
+  let g="";
+  for(let i=0;i<=4;i++){const v=mn+rng*i/4;g+=`<line x1="${PL}" y1="${Yc(v)}" x2="${W-14}" y2="${Yc(v)}" stroke="rgba(255,255,255,.055)"/>
+    <text x="${PL-9}" y="${Yc(v)+4}" text-anchor="end" fill="#6b7a8d" font-size="10" font-family="ui-monospace,monospace">${fmtS(v)}</text>`;}
+  yrs.forEach((y,i)=>{const x=PL+i*bw+bw*0.14,w=bw*0.33;
+    g+=`<rect x="${x}" y="${Yc(mt.rev[y])}" width="${w}" height="${Math.max(1,Yc(0)-Yc(mt.rev[y]))}" fill="rgba(47,212,232,.35)" rx="3"/>`;
+    const np=mt.np[y],y0=np>=0?Yc(np):Yc(0),hh=Math.abs(Yc(np)-Yc(0));
+    g+=`<rect x="${x+w+6}" y="${y0}" width="${w}" height="${Math.max(1,hh)}" fill="${np>=0?"#2fd4e8":"#f87171"}" rx="3"/>
+      <text x="${x+w+3}" y="${Hh-9}" text-anchor="middle" fill="#9aa8ba" font-size="11" font-family="ui-monospace,monospace">${y}</text>
+      <text x="${x+w+3}" y="${Math.min(y0,Yc(0))-6}" text-anchor="middle" fill="#7ae7f5" font-size="10.5" font-family="ui-monospace,monospace">${fmtS(np)}</text>`;});
+  g+=`<line x1="${PL}" y1="${Yc(0)}" x2="${W-14}" y2="${Yc(0)}" stroke="rgba(255,255,255,.3)"/>`;
+  document.getElementById("ch-years").innerHTML=`<svg viewBox="0 0 ${W} ${Hh}" style="height:${Hh}px">${g}</svg>`;
+  // структура расходов 2028
+  const Y28=f=>{let s=0;for(let m=1;m<=H;m++) if(mt.year[m]===2028) s+=f(m);return s;};
+  const rev28=Y28(m=>r[39][m])||1;
+  const items=[["Сырьё и упаковка",Y28(m=>r[40][m])],["Оплата труда со взносами",Y28(m=>r[50][m]+r[51][m]+r[52][m])],
+    ["Аренда",Y28(m=>r[53][m])],["Коммунальные",Y28(m=>r[54][m])],
+    ["Комиссии агрегатора и банка",Y28(m=>r[44][m]+r[45][m])],
+    ["Маркетинг и прочие",Y28(m=>r[55][m]+r[56][m])],
+    ["Амортизация и списание ремонта",Y28(m=>r[57][m]+r[58][m])],
+    ["Налоги и взносы ИП",Y28(m=>r[68][m]+r[59][m]+r[60][m])]].sort((a,b)=>b[1]-a[1]);
+  const mxi=items[0][1]||1;
+  document.getElementById("ch-cost").innerHTML=items.map(([n,v])=>
+    `<div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:4px">
+      <span>${n}</span><span class="mono" style="color:#7ae7f5">${pct(v/rev28)}</span></div>
+     <div style="height:6px;background:#152030;border-radius:3px;overflow:hidden">
+      <div style="height:100%;width:${(v/mxi*100).toFixed(1)}%;background:linear-gradient(90deg,#2fd4e8,#1a9db0);border-radius:3px"></div></div></div>`
+    ).join("")+`<div style="margin-top:12px;font-size:12.5px;color:#9aa8ba">Остаётся чистой прибыли
+      <b class="mono" style="color:#4ade80">${pct(mt.np[2028]/rev28)}</b> выручки</div>`;
+}
+function drawTables(mt){
+  const yrs=[2026,2027,2028,2029];
+  const rows=[["Выручка без НДС","rev"],["Валовая прибыль","gp"],["Операционная прибыль","op"],
+    ["Налог УСН","tax"],["Чистая прибыль","np"],["Чистый денежный поток","cf"],["Деньги на конец года","endCash"]];
+  let h=`<tr><th>Показатель</th>${yrs.map(y=>`<th>${y}</th>`).join("")}<th>Итого</th></tr>`;
+  rows.forEach(([n,k])=>{
+    const vals=yrs.map(y=>mt[k][y]||0);
+    const tot=k==="endCash"?mt.endTotal:vals.reduce((a,b)=>a+b,0);
+    h+=`<tr${k==="np"?' class="total"':''}><td>${n}</td>${vals.map(v=>`<td class="${v<0?"neg":""}">${fmt(v)}</td>`).join("")}<td class="${tot<0?"neg":""}">${fmt(tot)}</td></tr>`;});
+  document.getElementById("t-years").innerHTML=h;
+  const {r,H}=mt;
+  let m2=`<tr><th>Месяц</th><th>Выручка</th><th>Валовая</th><th>Опер. прибыль</th><th>Чистая прибыль</th><th>Поток за месяц</th><th>Деньги на конец</th></tr>`;
+  for(let m=1;m<=H;m++){
+    m2+=`<tr><td>${m}. ${monthLabel(m)}</td><td>${fmt(r[39][m])}</td><td>${fmt(r[41][m])}</td>
+      <td class="${r[62][m]<0?"neg":""}">${fmt(r[62][m])}</td>
+      <td class="${r[69][m]<0?"neg":""}">${fmt(r[69][m])}</td>
+      <td class="${r[115][m]<0?"neg":""}">${fmt(r[115][m])}</td>
+      <td class="${r[117][m]<0?"neg":""}">${fmt(r[117][m])}</td></tr>`;}
+  document.getElementById("t-months").innerHTML=m2;
+}
+function drawChecks(mt){
+  const {r,H}=mt;let mixOk=true,cashOk=true;
+  for(let m=1;m<=H;m++){if(Math.abs(r[29][m]+r[28][m]-1)>1e-9)mixOk=false;
+    if(Math.abs(r[117][m]-r[116][m]-r[115][m])>1)cashOk=false;}
+  const c=[["Доли каналов дают 100%",mixOk,"Точка и доставка в сумме всегда равны всей выручке."],
+   ["Остаток равен началу плюс поток",cashOk,"Баланс денег сходится в каждом из 36 месяцев."],
+   ["Смены продавцов закрыты",mt.sellerGap<0.001,mt.sellerGap<0.001?("Продавцов "+cur("sellers")+", часы работы точки закрыты."):("Не хватает "+mt.sellerGap.toFixed(2).replace(".",",")+" ставки при "+cur("sellers")+" продавцах. Добавьте ещё одного в панели слева.")],
+   ["Финансирования хватает",mt.defc<1,mt.defc<1?"Денег хватает во всех месяцах.":"Пик нехватки "+fmt(mt.defc)+" руб."]];
+  document.getElementById("checks").innerHTML=c.map(([n,ok,d])=>
+    `<div class="chk"><span class="dot ${ok?"g":"r"}"></span><div><b>${n}</b><span>${d}</span></div></div>`).join("");
+}
+let limTimer=null;
+function drawLimits(){
+  const box=document.getElementById("limits");
+  box.innerHTML=`<div class="lim" style="grid-column:1/-1;color:var(--tx3)">Считаю границы, это занимает секунду...</div>`;
+  clearTimeout(limTimer);
+  limTimer=setTimeout(()=>{
+    const list=SLIDERS.filter(s=>["checksDay","avgCheck","rawShare","rent","dSalary","capex"].includes(s.k));
+    box.innerHTML=list.map(s=>{
+      const L=limitOf(s), b=scenBase()[s.k];
+      if(!L) return `<div class="lim"><div class="lim-n">${s.name}</div>
+        <div class="lim-x">Проект не окупается уже при плановом значении, граница не считается.</div></div>`;
+      const v=s.abs? b+(s.bad?1:-1)*L.t : b*(1+(s.bad?1:-1)*L.t);
+      const w=Math.min(100,L.t/0.5*100);
+      return `<div class="lim"><div class="lim-n">${s.name}</div>
+        <div class="lim-t"><span>запас до потери окупаемости</span><b>${L.capped?"больше 50%":pct(L.t,0)}</b></div>
+        <div class="lim-bar"><div class="lim-fill" style="width:${Math.min(100,Math.max(4,w))}%"></div></div>
+        <div class="lim-x">${L.capped
+          ? "Даже изменение на половину от плана окупаемость не убирает. Параметр для проекта неопасен."
+          : dot("Окупаемость за 36 месяцев пропадает, если величина "+(s.bad?"вырастет до ":"упадёт до ")+
+            '<b class="mono" style="color:#7ae7f5">'+s.fmtv(v)+"</b>"+(s.unit?" "+s.unit:""))}</div></div>`;
+    }).join("");
+  },120);
+}
+
+/* ====================== записка ====================== */
+function fillNote(mt){
+  const fin=BASE.equityAmt+cur("loanAmt"), gap=Math.max(0,mt.defc);
+  const set=(k,v)=>document.querySelectorAll(`[data-k="${k}"]`).forEach(e=>e.innerHTML=v);
+  document.getElementById("note-scen").textContent=
+    "Сценарий «"+SCEN[scen].n.toLowerCase()+"»: "+Math.round(cur("checksDay"))+" чеков в день, средний чек "+
+    Math.round(cur("avgCheck"))+" руб., сырьё и упаковка "+pct(cur("rawShare"))+" выручки.";
+  set("need",fmt(mt.need)); set("equity",fmt(BASE.equityAmt)); set("loan",fmt(cur("loanAmt"))); set("fin",fmt(fin));
+  set("gapsentence",gap>1?"Этого не хватает.":"Этого достаточно во всех месяцах.");
+  document.getElementById("gapbox").innerHTML=gap>1?
+    `<p>Разрыв <b class="num">${fmt(gap)}</b> руб. появляется ещё до открытия, в декабре 2026 года, когда оплачиваются ремонт, оборудование и резерв. Закрыть его можно четырьмя способами: увеличить микрозайм фонда под 8% годовых, уменьшить смету, договориться о втором месяце арендных каникул или отложить часть мебели и посуды на первые месяцы работы.</p>`:
+    `<p>Денег хватает во всех 36 месяцах, минимальный остаток на счёте не опускается ниже ${fmt(BASE.minCash)} руб.</p>`;
+  set("paybacksentence",mt.pay?
+    `Проект окупается на <b class="num">${mt.pay}</b>-м месяце модели, это ${monthLabel(mt.pay)}, или ${mt.pay-2}-й месяц работы точки.`:
+    `За 36 месяцев проект не окупается: накопленный денежный поток остаётся отрицательным до конца горизонта.`);
+  set("worstmonth",monthLabel(mt.worst)); set("worstcash",fmt(mt.r[117][mt.worst]));
+  set("rev28",fmt(mt.rev[2028])); set("np28",fmt(mt.np[2028]));
+  set("npm28",pct(mt.rev[2028]?mt.np[2028]/mt.rev[2028]:0));
+  set("npall",fmt(mt.npTotal)); set("endcash",fmt(mt.endTotal));
+  set("gm",pct(mt.rev[2028]?mt.gp[2028]/mt.rev[2028]:0));
+  const Y28=f=>{let s=0;for(let m=1;m<=mt.H;m++) if(mt.year[m]===2028) s+=f(m);return s;};
+  const it=[["сырьё и упаковка",Y28(m=>mt.r[40][m])],["оплата труда со взносами",Y28(m=>mt.r[50][m]+mt.r[51][m]+mt.r[52][m])],
+    ["аренда",Y28(m=>mt.r[53][m])],["коммунальные услуги",Y28(m=>mt.r[54][m])],
+    ["комиссии агрегатора и банка",Y28(m=>mt.r[44][m]+mt.r[45][m])]].sort((a,b)=>b[1]-a[1]).slice(0,3);
+  set("top3",it.map(([n,v])=>`${n} <b class="num">${pct(v/(mt.rev[2028]||1))}</b>`).join(", "));
+  set("fragile",mt.pay?
+    "Результат держится на четырёх допущениях. Если хотя бы одно из них не подтвердится, выводы меняются.":
+    "При текущих значениях проект не окупается за три года, и это первое, что нужно обсудить.");
+}
+
+/* ====================== презентация ====================== */
+function altMetrics(ov){return metrics(runModel(buildParams(ov)));}
+function buildDeck(mt){
+  const fin=BASE.equityAmt+cur("loanAmt"), gap=Math.max(0,mt.defc);
+  const i=BASE.loanRate/12, annOf=x=>x*i/(1-Math.pow(1+i,-BASE.loanTerm));
+  const addPay=annOf(gap);
+  const sellPlus=altMetrics({sellers:cur("sellers")+1});
+  const sellCost=mt.np[2028]-sellPlus.np[2028];
+  const priceDown=altMetrics({avgCheck:cur("avgCheck")*0.9,rawShare:cur("rawShare")/0.9});
+  const priceCost=mt.np[2028]-priceDown.np[2028];
+  const Y28=f=>{let s=0;for(let m=1;m<=mt.H;m++) if(mt.year[m]===2028) s+=f(m);return s;};
+  const flat=Y28(m=>mt.r[50][m])*0.30-Y28(m=>mt.r[51][m]);
+  const S=[
+   {e:"Финансовая модель",h:"Пекарня у дома в Казани",
+    b:`<p>Помещение 60 м² в спальном районе, полный цикл: хлеб, выпечка и кофе навынос, плюс доставка через агрегатор.</p>
+       <p>Горизонт 36 месяцев, с ноября 2026 по октябрь 2029. Открытие в январе 2027 года.</p>
+       <div class="big"><div><div class="bl">Сценарий</div><div class="bv">${SCEN[scen].n}</div></div>
+       <div><div class="bl">Чеков в день</div><div class="bv">${Math.round(cur("checksDay"))}</div></div>
+       <div><div class="bl">Средний чек</div><div class="bv">${Math.round(cur("avgCheck"))} ₽</div></div></div>`,
+    n:"Назовите формат и горизонт. Сразу скажите, что модель живая и любую цифру можно подвигать прямо на встрече."},
+   {e:"Вопрос 1",h:"Сколько нужно вложить",
+    b:`<div class="big"><div><div class="bl">Потребность</div><div class="bv">${fmtS(mt.need)} ₽</div></div>
+       <div><div class="bl">Свои деньги</div><div class="bv">${fmtS(BASE.equityAmt)} ₽</div></div>
+       <div><div class="bl">Заёмные</div><div class="bv">${fmtS(cur("loanAmt"))} ₽</div></div>
+       <div><div class="bl">${gap>1?"Не хватает":"Запас"}</div><div class="bv" style="color:${gap>1?"#f87171":"#4ade80"}">${fmtS(gap>1?gap:fin-mt.need)} ₽</div></div></div>
+       <p>В потребность входят смета запуска с резервом 15%, аренда и зарплата за два месяца до открытия, стартовый запас сырья и минимальный остаток на счёте ${fmt(BASE.minCash)} руб.</p>`,
+    n:"Главная мысль встречи. Деньги заканчиваются в декабре 2026 года, до открытия, когда оплачиваются ремонт и оборудование. Банковский кредит в этот момент недоступен, банк требует год работы бизнеса."},
+   {e:"График 1",h:"Где и когда кончаются деньги",
+    b:`<p>Остаток на счёте по месяцам с учётом собственных средств и кредита. Красная зона это месяцы, когда денег на счёте нет.</p>
+       <div class="s-chart">${cashChartHTML(mt,300)}</div>
+       <p style="font-size:14px;color:var(--cap)">Жёлтый пунктир это минимальный остаток ${fmt(BASE.minCash)} руб. Самое дно ${fmtS(mt.r[117][mt.worst])} руб. в ${monthLabel(mt.worst)}.</p>`,
+    n:"Этот график продаёт главное решение встречи. Покажите пальцем: дыра появляется до открытия, значит договариваться о деньгах нужно сейчас, а не после."},
+   {e:"Вопрос 2",h:"Когда вернутся деньги",
+    b:`<div class="big"><div><div class="bl">Окупаемость</div><div class="bv">${mt.pay?mt.pay+"-й месяц":"не наступает"}</div></div>
+       <div><div class="bl">Это месяц работы</div><div class="bv">${mt.pay?(mt.pay-2):"нет"}</div></div>
+       <div><div class="bl">Самое дно по деньгам</div><div class="bv">${fmtS(mt.r[117][mt.worst])} ₽</div></div></div>
+       <p>${mt.pay?"Накопленный денежный поток проекта выходит в плюс в "+monthLabel(mt.pay)+".":"За три года накопленный поток в плюс не выходит."}
+       Считаем без учёта кредита и вашего взноса, то есть смотрим на сам бизнес, а не на схему финансирования.</p>`,
+    n:"Поясните разницу между месяцем модели и месяцем работы: модель начинается с аренды в ноябре, а продажи с января."},
+   {e:"График 2",h:"Когда проект возвращает вложенное",
+    b:`<p>Накопленный денежный поток проекта: все поступления минус все платежи, без кредита и взноса собственника.</p>
+       <div class="s-chart">${cumChartHTML(mt,300)}</div>
+       <p style="font-size:14px;color:var(--cap)">${mt.pay?"Линия пересекает ноль в "+monthLabel(mt.pay)+". До этого проект живёт на вложенные деньги.":"За 36 месяцев линия ноль не пересекает."}</p>`,
+    n:"Скажите, что точка окупаемости сдвигается вправо от любой ошибки в трафике. Можно тут же подвигать чеки в день на вкладке «Модель»."},
+   {e:"Вопрос 3",h:"Какая будет прибыль",
+    b:`<div class="big"><div><div class="bl">Выручка 2028</div><div class="bv">${fmtS(mt.rev[2028])} ₽</div></div>
+       <div><div class="bl">Чистая прибыль 2028</div><div class="bv">${fmtS(mt.np[2028])} ₽</div></div>
+       <div><div class="bl">Рентабельность</div><div class="bv">${pct(mt.rev[2028]?mt.np[2028]/mt.rev[2028]:0)}</div></div>
+       <div><div class="bl">Деньги на конец</div><div class="bv">${fmtS(mt.endTotal)} ₽</div></div></div>
+       <p>2028 год это первый полный год работы. В 2026 и 2029 годах модель захватывает только часть года.</p>
+       <p>Доли в выручке 2028 года: сырьё и упаковка ${pct(Y28(m=>mt.r[40][m])/(mt.rev[2028]||1))},
+       оплата труда со взносами ${pct(Y28(m=>mt.r[50][m]+mt.r[51][m]+mt.r[52][m])/(mt.rev[2028]||1))},
+       аренда и коммунальные ${pct(Y28(m=>mt.r[53][m]+mt.r[54][m])/(mt.rev[2028]||1))},
+       налоги и взносы ИП ${pct(Y28(m=>mt.r[68][m]+mt.r[59][m]+mt.r[60][m])/(mt.rev[2028]||1))}.</p>`,
+    n:"Если клиент спросит про зарплату себе: выплаты собственнику заложены с девятого месяца по 50 тыс. руб. и только при сохранении минимального остатка."},
+   {e:"Запас прочности",h:"Насколько можно ошибиться",
+    b:`<p>Для каждой ключевой величины посчитана граница: насколько она может уйти в худшую сторону, пока проект ещё окупается за 36 месяцев.</p>
+       <div id="deck-lim" class="decs"></div>`,
+    n:"Покажите этот блок вживую на вкладке «Модель»: подвигайте чеки в день вниз и дайте клиенту увидеть, в какой момент окупаемость пропадает."},
+   {e:"Главное",h:"Решения, которые нужно принять до старта",
+    cls:"slide-dec",
+    b:`<p>Пять вопросов, на которые нужен ответ раньше, чем будет подписан договор аренды. Справа цена вопроса в деньгах или в сроке.</p>
+       <div class="decs">
+        <div class="dec"><div class="dec-n">1</div>
+          <div><div class="dec-q">Чем закрыть разрыв в деньгах</div>
+            <div class="dec-o">Увеличить микрозайм фонда под 8% годовых, урезать смету, договориться о втором месяце арендных каникул или отложить часть мебели и посуды на первые месяцы.</div></div>
+          <div class="dec-p">${gap>1?"не хватает "+fmt(gap)+" руб.<br>заём вырастет на "+fmt(addPay)+" руб. в месяц":"денег хватает"}</div></div>
+        <div class="dec"><div class="dec-n">2</div>
+          <div><div class="dec-q">Сколько продавцов нанимать</div>
+            <div class="dec-o">При ${cur("sellers")} продавцах и работе 13 часов без выходных смены ${mt.sellerGap<0.001?"закрыты":"не закрыты, не хватает "+mt.sellerGap.toFixed(2).replace(".",",")+" ставки"}. Либо ещё один продавец, либо короче часы, либо переработки.</div></div>
+          <div class="dec-p">третий продавец<br>минус ${fmt(sellCost)} руб. прибыли за 2028</div></div>
+        <div class="dec"><div class="dec-n">3</div>
+          <div><div class="dec-q">Есть ли в помещении готовая вентиляция</div>
+            <div class="dec-o">Без канала под общепит нужна трасса по фасаду, а это решение общего собрания собственников дома. Вопрос к арендодателю до подписания договора.</div></div>
+          <div class="dec-p">от 30 000 до 80 000 руб.<br>и от полутора месяцев к сроку</div></div>
+        <div class="dec"><div class="dec-n">4</div>
+          <div><div class="dec-q">Код ОКВЭД и право на пониженные взносы</div>
+            <div class="dec-o">Внести основной код 10.71 в ЕГРИП до 1 января 2027 года и подтвердить в налоговой право на тариф 7,6% сверх 1,5 МРОТ.</div></div>
+          <div class="dec-p">без льготы взносы вырастут<br>на ${fmt(flat)} руб. за 2028</div></div>
+        <div class="dec"><div class="dec-n">5</div>
+          <div><div class="dec-q">Держать ли цены в верхней половине рынка</div>
+            <div class="dec-o">Себестоимость 26,8% выручки посчитана при ценах выше середины казанских диапазонов. Если придётся продавать дешевле, доля сырья растёт.</div></div>
+          <div class="dec-p">цены ниже на 10%<br>минус ${fmt(priceCost)} руб. прибыли за 2028</div></div>
+       </div>`,
+    n:"Это центральный слайд. Не уходите с него, пока по каждому пункту не записан ответ или срок. Первый вопрос самый срочный: без ответа на него остальное считать бессмысленно."},
+   {e:"Риски",h:"Где модель может ошибаться",
+    b:`<ul><li>Трафик. Количество чеков в день это главный драйвер, надёжного открытого источника у него нет. Нужен замер на адресе: посчитать чеки в трёх-пяти соседних пекарнях по часам, три дня, включая субботу.</li>
+       <li>Себестоимость. 26,8% посчитаны по типовым техкартам, а не по вашим рецептурам.</li>
+       <li>Трафик падает по рынку. По данным касс число чеков в пекарнях за первое полугодие 2026 года снизилось на 10% за год, а число пекарен в миллионниках на 7%.</li>
+       <li>Коммунальные услуги. 38 тыс. руб. в месяц это расчёт от мощности оборудования, а не счёт. Нужны зимние счета прошлого арендатора.</li></ul>`,
+    n:"Не прячьте риски. Клиент принимает решение на свои деньги, и честный список рисков повышает доверие к остальным цифрам."},
+   {e:"Итог",h:mt.pay?"Проект окупается, но денег на старте не хватает":"При этих значениях проект за три года не окупается",
+    b:`<div class="big"><div><div class="bl">Нужно денег</div><div class="bv">${fmtS(mt.need)} ₽</div></div>
+       <div><div class="bl">Окупаемость</div><div class="bv">${mt.pay?mt.pay+"-й мес.":"нет"}</div></div>
+       <div><div class="bl">Прибыль 2028</div><div class="bv">${fmtS(mt.np[2028])} ₽</div></div></div>
+       <p>${gap>1?"До начала ремонта нужно закрыть разрыв "+fmt(gap)+" руб. Это первое решение, остальное считается от него.":"Финансирования хватает, можно переходить к договору аренды и смете."}</p>`,
+    n:"Закончите одним вопросом: готовы ли вы закрыть разрыв, и если да, то чем."}];
+  document.getElementById("slides").innerHTML=S.map((s,i)=>
+    `<div class="slide ${s.cls||""}${i===0?" on":""}" data-i="${i}"><div class="s-eyebrow">${s.e}</div><h2>${s.h}</h2>${s.b}</div>`).join("");
+  document.getElementById("dots").innerHTML=S.map((s,i)=>`<b${i===0?' class="on"':""} data-i="${i}"></b>`).join("");
+  window.DECK=S; showSlide(window.CURSL||0); fillDeckLimits();
+}
+function fillDeckLimits(){
+  const box=document.getElementById("deck-lim"); if(!box) return;
+  const list=SLIDERS.filter(s=>["checksDay","avgCheck","rawShare","rent"].includes(s.k));
+  box.innerHTML=list.map(s=>{
+    const L=limitOf(s), b=scenBase()[s.k];
+    if(!L) return "";
+    const v=s.abs? b+(s.bad?1:-1)*L.t : b*(1+(s.bad?1:-1)*L.t);
+    return `<div class="dec"><div class="dec-n">${s.rank}</div>
+      <div><div class="dec-q">${s.name}</div>
+        <div class="dec-o">${L.capped?"Даже изменение на половину от плана окупаемость не убирает.":
+          dot("Окупаемость пропадает, если величина "+(s.bad?"вырастет до ":"упадёт до ")+s.fmtv(v)+(s.unit?" "+s.unit:""))}</div></div>
+      <div class="dec-p">запас ${L.capped?"больше 50%":pct(L.t,0)}</div></div>`;}).join("");
+}
+function showSlide(i){
+  const S=window.DECK||[];if(!S.length)return;
+  i=Math.max(0,Math.min(S.length-1,i));window.CURSL=i;
+  document.querySelectorAll(".slide").forEach(s=>s.classList.toggle("on",+s.dataset.i===i));
+  document.querySelectorAll(".dots b").forEach(d=>d.classList.toggle("on",+d.dataset.i===i));
+  document.getElementById("slidenum").textContent=(i+1)+" / "+S.length;
+  document.getElementById("speaker").textContent=S[i].n;
+}
+
+/* ====================== пересчёт ====================== */
+function recalc(skipLimits){
+  const mt=metrics(runModel(buildParams()));
+  if(!baseMt && !Object.keys(over).length) baseMt=mt;
+  drawKpis(mt); drawCharts(mt); drawTables(mt); drawChecks(mt); fillNote(mt); buildDeck(mt);
+  drawLimits();
+  window.MT=mt;
+}
+/* ====================== события ====================== */
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-selected",x===t));
+  ["model","note","deck"].forEach(n=>document.getElementById("tab-"+n).hidden=(n!==t.dataset.tab));
+  window.scrollTo({top:0,behavior:"smooth"});
+}));
+document.querySelectorAll(".sbtn").forEach(b=>b.addEventListener("click",()=>{
+  scen=+b.dataset.scen; over={}; baseMt=null;
+  document.querySelectorAll(".sbtn").forEach(x=>x.classList.toggle("on",x===b));
+  drawSliders(); drawStaff(); recalc();
+}));
+document.getElementById("reset").addEventListener("click",()=>{over={};drawSliders();drawStaff();recalc();});
+document.getElementById("btn-months").addEventListener("click",e=>{
+  const w=document.getElementById("wrap-months");w.hidden=!w.hidden;
+  e.target.textContent=w.hidden?"Показать помесячно":"Скрыть помесячно";});
+document.getElementById("prev").addEventListener("click",()=>showSlide((window.CURSL||0)-1));
+document.getElementById("next").addEventListener("click",()=>showSlide((window.CURSL||0)+1));
+document.getElementById("dots").addEventListener("click",e=>{if(e.target.dataset.i!==undefined)showSlide(+e.target.dataset.i);});
+document.addEventListener("keydown",e=>{
+  if(document.getElementById("tab-deck").hidden)return;
+  if(e.key==="ArrowRight"||e.key===" ")showSlide((window.CURSL||0)+1);
+  if(e.key==="ArrowLeft")showSlide((window.CURSL||0)-1);});
+document.getElementById("to-model").addEventListener("click",()=>document.querySelector('.tab[data-tab="model"]').click());
+document.getElementById("pr-deck").addEventListener("click",()=>window.print());
+document.getElementById("pr-doc").addEventListener("click",()=>window.print());
+document.getElementById("dl-doc").addEventListener("click",()=>{
+  const body=document.querySelector("#tab-note .note").cloneNode(true);
+  body.querySelectorAll(".btnrow,.eyebrow").forEach(n=>n.remove());
+  const html=`<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word'
+    xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset="utf-8">
+    <style>body{font-family:Calibri,Arial,sans-serif;font-size:11pt;color:#111;line-height:1.5}
+    h2{font-size:17pt;color:#0b5a66}h3{font-size:13pt;color:#0b5a66;margin-top:18pt}
+    .num{font-weight:bold}.callout{border-left:3pt solid #0b5a66;padding-left:10pt;background:#f2fbfc}
+    </style></head><body>${body.innerHTML}</body></html>`;
+  const a=document.createElement("a");
+  a.href="data:application/msword;charset=utf-8,"+encodeURIComponent(html);
+  a.download="Аналитическая записка. Пекарня в Казани.doc";
+  document.body.appendChild(a);a.click();a.remove();});
+
+drawSliders(); drawStaff(); recalc();
+</script>
+</body></html>

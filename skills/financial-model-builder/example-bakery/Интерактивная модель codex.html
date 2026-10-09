@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Интерактивная финансовая модель — пекарня, Казань</title>
+  <style>
+    :root{--navy:#17365d;--blue:#2f75b5;--sky:#eaf3f8;--pale:#f5f8fb;--line:#d7e0e8;--text:#1f2937;--muted:#667085;--green:#26734d;--green-bg:#e6f4ed;--red:#a61b1b;--red-bg:#fde9e7;--amber:#8a5b00;--amber-bg:#fff4d6;--white:#fff;--shadow:0 12px 32px rgba(23,54,93,.08)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#f3f6f9;color:var(--text);font-family:Arial,"Helvetica Neue",sans-serif;font-size:17px;line-height:1.45}
+    button,input{font:inherit}button{cursor:pointer}.wrap{max-width:1480px;margin:0 auto;padding:28px 22px 56px}.hero{background:linear-gradient(135deg,#17365d 0%,#2f75b5 100%);color:#fff;border-radius:24px;padding:32px 34px;box-shadow:var(--shadow)}
+    .eyebrow{font-size:14px;letter-spacing:.08em;text-transform:uppercase;opacity:.78}.hero h1{font-size:clamp(30px,4vw,50px);line-height:1.08;margin:10px 0 8px}.hero p{max-width:880px;margin:0;color:#dfeaf5;font-size:18px}
+    .top-controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:24px}.scenario-group{display:flex;flex-wrap:wrap;gap:8px}.scenario-btn,.reset-btn,.toggle-btn,.presentation-btn,.download-btn{border:1px solid rgba(255,255,255,.34);border-radius:12px;padding:11px 16px;background:rgba(255,255,255,.1);color:#fff;font-weight:700}.scenario-btn.active{background:#fff;color:var(--navy)}.reset-btn{margin-left:auto;background:#fff;color:var(--navy)}.presentation-btn{background:#79bde5;color:#102f50;border-color:#9ed3f1}.download-btn{background:var(--navy);border-color:var(--navy);color:#fff}
+    .section{margin-top:26px}.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:13px}.section h2{font-size:26px;margin:0;color:var(--navy)}.section-note{color:var(--muted);font-size:14px;max-width:680px;text-align:right}
+    .controls-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.control-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 6px 20px rgba(23,54,93,.05)}.control-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.control-label{font-weight:700;color:var(--navy)}.delta{font-size:13px;border-radius:99px;padding:4px 8px;background:var(--sky);color:var(--blue);white-space:nowrap}.input-line{display:grid;grid-template-columns:1fr 150px;gap:12px;align-items:center;margin-top:15px}input[type=range]{width:100%;accent-color:var(--blue)}.number-wrap{display:flex;align-items:center;border:1px solid #b9c9d8;border-radius:10px;background:#fff;overflow:hidden}.number-wrap input{width:100%;min-width:0;border:0;padding:9px 8px;text-align:right;color:var(--navy);font-weight:700;outline:none}.number-wrap span{padding:0 9px 0 2px;color:var(--muted);font-size:13px;white-space:nowrap}.control-note{margin-top:9px;color:var(--muted);font-size:13px}
+    .kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}.kpi{background:#fff;border:1px solid var(--line);border-radius:18px;padding:19px;box-shadow:0 6px 20px rgba(23,54,93,.05)}.kpi-label{font-size:14px;color:var(--muted);min-height:40px}.kpi-value{font-size:clamp(24px,2.2vw,34px);font-weight:800;color:var(--navy);margin-top:6px;white-space:nowrap}.kpi-sub{font-size:13px;color:var(--muted);margin-top:5px}.kpi.status.good{background:var(--green-bg);border-color:#b8dfca}.kpi.status.good .kpi-value{color:var(--green)}.kpi.status.bad{background:var(--red-bg);border-color:#f1b9b4}.kpi.status.bad .kpi-value{color:var(--red);font-size:22px;white-space:normal}
+    .secondary-metrics{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}.secondary-pill{background:#fff;border:1px solid var(--line);border-radius:99px;padding:8px 13px;color:var(--muted);font-size:14px}.secondary-pill strong{color:var(--navy)}
+    .charts{display:grid;grid-template-columns:1.35fr 1fr;gap:16px}.chart-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 6px 20px rgba(23,54,93,.05);overflow:hidden}.chart-title{font-weight:800;color:var(--navy);margin-bottom:6px}.chart-note{font-size:13px;color:var(--muted);margin-bottom:12px}.chart-card svg{width:100%;height:auto;display:block}.legend{display:flex;gap:15px;flex-wrap:wrap;margin-top:10px;font-size:13px;color:var(--muted)}.legend span:before{content:"";display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px;background:var(--legend)}
+    .table-card{background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 6px 20px rgba(23,54,93,.05);overflow:hidden}.table-scroll{overflow:auto;max-width:100%}table{border-collapse:separate;border-spacing:0;width:100%;font-size:14px}th{background:var(--navy);color:#fff;padding:11px 12px;text-align:center;position:sticky;top:0;z-index:3;white-space:nowrap}td{padding:9px 12px;border-bottom:1px solid #edf0f3;text-align:right;white-space:nowrap}td:first-child,td:nth-child(2){text-align:left}.annual-table td:first-child{font-weight:700;color:var(--navy)}.annual-table tr:nth-child(even) td{background:#f9fbfc}.monthly-table{min-width:2800px}.monthly-table th:first-child,.monthly-table td:first-child{position:sticky;left:0;z-index:2;background:#fff;min-width:285px;max-width:285px;white-space:normal}.monthly-table th:nth-child(2),.monthly-table td:nth-child(2){position:sticky;left:285px;z-index:2;background:#fff;min-width:120px;max-width:120px}.monthly-table th:first-child,.monthly-table th:nth-child(2){background:var(--navy);z-index:4}.monthly-table .section-row td{background:#dce9f4!important;color:var(--navy);font-weight:800;text-align:left;position:static}.monthly-table tr:hover td:not(.section-cell){background:#f0f6fb}.negative{color:var(--red)}
+    .toggle-bar{display:flex;justify-content:center;padding:17px}.toggle-btn{background:var(--navy);color:#fff;border-color:var(--navy)}.monthly-wrap[hidden]{display:none}.footer-note{margin-top:18px;padding:16px 18px;background:var(--amber-bg);border:1px solid #efd38a;border-radius:14px;color:#684700;font-size:14px}
+    .note-card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:24px;box-shadow:var(--shadow)}.note-toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:8px}.note-toolbar h2{margin:0}.note-content h3{color:var(--navy);font-size:19px;margin:24px 0 8px}.note-content p{margin:7px 0}.note-content ul{margin:8px 0 0;padding-left:22px}.note-content li{margin:6px 0}.note-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}.note-stat{background:var(--pale);border:1px solid var(--line);border-radius:14px;padding:14px}.note-stat strong{display:block;color:var(--navy);font-size:22px;margin-top:4px}.source-table td:first-child{font-weight:700;color:var(--navy)}.source-table td{white-space:normal;vertical-align:top}.status-wait{color:var(--amber);font-weight:700}.plain-footer{display:flex;justify-content:space-between;gap:16px;margin-top:24px;padding:18px 4px 0;color:var(--muted);font-size:13px;border-top:1px solid var(--line)}
+    .presentation-overlay{position:fixed;inset:0;background:#edf4f9;z-index:1000;display:flex;flex-direction:column}.presentation-overlay[hidden]{display:none}.presentation-top{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;background:var(--navy);color:#fff}.presentation-brand{font-weight:800}.presentation-actions{display:flex;gap:9px}.presentation-actions button,.presentation-nav button{border:1px solid rgba(255,255,255,.35);background:#fff;color:var(--navy);border-radius:10px;padding:9px 13px;font-weight:700}.presentation-stage{flex:1;display:grid;place-items:center;overflow:auto;padding:24px}.presentation-slide{width:min(1120px,100%);min-height:min(640px,calc(100vh - 150px));background:#fff;border-radius:28px;padding:clamp(28px,5vw,68px);box-shadow:0 18px 50px rgba(23,54,93,.15);display:flex;flex-direction:column;justify-content:center}.slide-kicker{color:var(--blue);font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:14px}.presentation-slide h2{font-size:clamp(34px,5vw,62px);line-height:1.08;color:var(--navy);margin:12px 0 24px}.slide-lead{font-size:clamp(20px,2.4vw,30px);max-width:920px}.slide-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.slide-stat{padding:22px;border-radius:18px;background:var(--sky);border:1px solid #c9dfed}.slide-stat span{display:block;color:var(--muted);font-size:16px}.slide-stat strong{display:block;color:var(--navy);font-size:clamp(25px,3vw,42px);margin-top:9px}.slide-list{display:grid;gap:14px}.slide-list div{padding:17px 20px;background:var(--pale);border-left:5px solid var(--blue);border-radius:12px;font-size:clamp(18px,2vw,26px)}.slide-chart svg{width:100%;max-height:330px}.speaker-notes{margin-top:20px;background:var(--amber-bg);border:1px solid #efd38a;border-radius:14px;padding:14px 16px;color:#684700}.speaker-notes[hidden]{display:none}.presentation-nav{display:flex;align-items:center;justify-content:center;gap:14px;padding:12px 20px;background:var(--navy);color:#fff}.presentation-nav button:disabled{opacity:.45}.slide-counter{min-width:72px;text-align:center}.body-presentation{overflow:hidden}
+    @media(max-width:1050px){.controls-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.charts{grid-template-columns:1fr}.reset-btn{margin-left:0}.note-grid{grid-template-columns:1fr}.slide-stats{grid-template-columns:1fr}}
+    @media(max-width:680px){body{font-size:16px}.wrap{padding:14px 12px 40px}.hero{border-radius:18px;padding:24px 18px}.top-controls{align-items:stretch}.scenario-group{display:grid;grid-template-columns:1fr;width:100%}.scenario-btn,.reset-btn,.presentation-btn{width:100%}.controls-grid,.kpis{grid-template-columns:1fr}.input-line{grid-template-columns:1fr}.section-head{display:block}.section-note{text-align:left;margin-top:5px}.kpi-label{min-height:auto}.monthly-table th:first-child,.monthly-table td:first-child{min-width:220px;max-width:220px}.monthly-table th:nth-child(2),.monthly-table td:nth-child(2){left:220px}.note-card{padding:18px}.note-toolbar{align-items:stretch;flex-direction:column}.plain-footer{flex-direction:column}.presentation-top{align-items:flex-start}.presentation-actions{flex-wrap:wrap;justify-content:flex-end}.presentation-stage{padding:10px}.presentation-slide{border-radius:18px;min-height:calc(100vh - 160px);padding:24px 18px}.slide-stats{gap:10px}.slide-stat{padding:14px}.presentation-nav{padding:9px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="hero">
+      <div class="eyebrow">Пекарня полного цикла без посадочных мест · Казань</div>
+      <h1>Интерактивная финансовая модель</h1>
+      <p>Горизонт 36 месяцев. Расчёт повторяет помесячную логику Excel: продажи, налоги, оборотный капитал, кредит, движение денег и показатели проекта.</p>
+      <div class="top-controls">
+        <div class="scenario-group" role="group" aria-label="Сценарий">
+          <button type="button" class="scenario-btn" data-scenario="Пессимистичный">Пессимистичный</button><button type="button" class="scenario-btn active" data-scenario="Базовый">Базовый</button><button type="button" class="scenario-btn" data-scenario="Оптимистичный">Оптимистичный</button>
+        </div>
+        <button type="button" class="presentation-btn" id="presentationButton">Презентация</button>
+        <button type="button" class="reset-btn" id="resetButton">Сбросить к базовому</button>
+      </div>
+    </header>
+
+    <section class="section">
+      <div class="section-head"><h2>Параметры</h2><div class="section-note">Диапазон каждого движка — от −30% до +30% относительно значения выбранного сценария. Точное значение можно ввести вручную.</div></div>
+      <div class="controls-grid" id="controls"></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>Основные показатели</h2><div class="section-note" id="stateNote">Базовый сценарий</div></div>
+      <div class="kpis">
+        <article class="kpi"><div class="kpi-label">Потребность в инвестициях</div><div class="kpi-value" id="investmentNeed"></div><div class="kpi-sub">Максимум по помесячному расчёту</div></article>
+        <article class="kpi"><div class="kpi-label">Месяц окупаемости</div><div class="kpi-value" id="payback"></div><div class="kpi-sub">По денежному потоку проекта</div></article>
+        <article class="kpi"><div class="kpi-label">Чистая прибыль второго года</div><div class="kpi-value" id="secondYearProfit"></div><div class="kpi-sub" id="secondYearLabel"></div></article>
+        <article class="kpi"><div class="kpi-label">Остаток денег на конец горизонта</div><div class="kpi-value" id="endingCash"></div><div class="kpi-sub">После финансирования и выплат</div></article>
+        <article class="kpi status" id="financingCard"><div class="kpi-label">Хватает ли финансирования</div><div class="kpi-value" id="financingStatus"></div><div class="kpi-sub" id="financingSub"></div></article>
+      </div>
+      <div class="secondary-metrics"><div class="secondary-pill">NPV: <strong id="npvValue"></strong></div><div class="secondary-pill">IRR: <strong id="irrValue"></strong></div></div>
+    </section>
+
+    <section class="section" id="analyticalNote">
+      <div class="note-card">
+        <div class="note-toolbar"><h2>Аналитическая записка</h2><button type="button" class="download-btn" id="downloadNote">Скачать записку</button></div>
+        <div class="note-content" id="noteContent"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>Графики</h2><div class="section-note">Графики обновляются при каждом изменении параметров.</div></div>
+      <div class="charts">
+        <article class="chart-card"><div class="chart-title">Накопленный денежный поток проекта</div><div class="chart-note">До собственных средств и кредита. Отметка показывает месяц окупаемости.</div><div id="cashFlowChart"></div></article>
+        <article class="chart-card"><div class="chart-title">Выручка и чистая прибыль по годам</div><div class="chart-note">Календарные годы внутри горизонта модели.</div><div id="annualChart"></div><div class="legend"><span style="--legend:#2f75b5">Выручка</span><span style="--legend:#68a88a">Чистая прибыль</span></div></article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>Результаты по годам</h2><div class="section-note">Суммы и рентабельность рассчитаны так же, как на листе «Сценарии».</div></div>
+      <div class="table-card"><div class="table-scroll"><table class="annual-table" id="annualTable"></table></div><div class="toggle-bar"><button type="button" class="toggle-btn" id="toggleMonthly">Показать помесячный расчёт</button></div><div class="monthly-wrap" id="monthlyWrap" hidden><div class="table-scroll"><table class="monthly-table" id="monthlyTable"></table></div></div></div>
+      <div class="footer-note">Параметр «Стартовые вложения» пропорционально меняет ремонт, оборудование, прочие расходы на запуск, обеспечительный платёж и первоначальный запас. Резерв непредвиденных вложений остаётся равным 15% изменённой сметы.</div>
+    </section>
+    <footer class="plain-footer"><span>Дата модели: 09.10.2026</span><span>Расчёт на основе финансовой модели в Excel, параметры согласованы с заказчиком</span></footer>
+  </main>
+
+  <section class="presentation-overlay" id="presentationOverlay" hidden aria-label="Режим презентации">
+    <div class="presentation-top"><div class="presentation-brand">Пекарня · Казань</div><div class="presentation-actions"><button type="button" id="notesButton">Заметки докладчика</button><button type="button" id="closePresentation">К модели</button></div></div>
+    <div class="presentation-stage"><article class="presentation-slide" id="presentationSlide"></article></div>
+    <div class="presentation-nav"><button type="button" id="prevSlide" aria-label="Предыдущий экран">←</button><span class="slide-counter" id="slideCounter"></span><button type="button" id="nextSlide" aria-label="Следующий экран">→</button></div>
+  </section>
+
+  <script>
+    const BASE_PARAMS = {"firstDate":"2026-11-01T00:00:00.000Z","horizon":36,"openMonth":3,"workDays":30,"deliveryShare":0.075,"cashlessShare":0.8,"ramp":[0.5,0.65,0.75,0.85,0.92,1],"season":[0.82,0.97,1.03,1.03,0.97,0.87,0.82,0.87,1.08,1.13,1.13,1.28],"priceIndex":0.07,"extraWriteoff":0,"aggregatorFee":0.35,"acquiringFee":0.0279,"rawIndex":0.045,"baker1Count":1,"baker1Salary":68966,"baker1Start":1,"baker2Count":1,"baker2Salary":68966,"baker2Start":2,"sellerCount":2,"sellerSalary":51724,"sellerStart":2,"wageIndex":0.068,"contribStd":0.3,"contribReduced":0.076,"accidentRate":0.004,"mrot2027":28935,"mrotMultiple":1.5,"rent":100000,"rentStart":1,"rentHoliday":1,"utilityWinter":40000,"utilityShoulder":38000,"utilitySummer":35000,"utilityStart":2,"tariffIndex":0.09,"marketing":20000,"marketingStart":3,"otherPreopen":15000,"otherRegular":28000,"otherFullStart":3,"repair":1050000,"repairPayMonth":2,"repairAmortStart":3,"equipment":1400000,"equipmentPayMonth":2,"equipmentLife":85,"equipmentStart":3,"otherLaunch":135000,"otherLaunchPayMonth":2,"deposit":100000,"depositPayMonth":1,"startupStock":82000,"startupStockMonth":3,"contingencyRate":0.15,"contingencyPayMonth":2,"inventoryDays":7,"supplierDays":0,"collectionDays":1.5,"minCash":200000,"usnRate":0.15,"usnMinRate":0.01,"vatRate":0.05,"vatThresholdBeforeChange":20000000,"vatThresholdAfterChange":15000000,"vatChangeYear":2030,"ipFixed2027":61154,"ipFixedIndex":0.045,"ipExtraRate":0.01,"ipExtraThreshold":300000,"taxAssetWriteoffYear":2027,"ownFunds":2000000,"ownFundsMonth":1,"loanAmount":1000000,"loanMonth":2,"loanRate":0.08,"loanTerm":36,"loanFirstPayment":3,"guaranteeFee":0.01,"ownerPayout":50000,"ownerPayoutStart":9,"discountRate":0.3,"monthsYear":12,"vatPayParts":3,"cashTolerance":1};
+    const SCENARIOS = {"Пессимистичный":{"planChecks":100,"avgTicket":250,"rawShare":0.308},"Базовый":{"planChecks":140,"avgTicket":280,"rawShare":0.268},"Оптимистичный":{"planChecks":190,"avgTicket":300,"rawShare":0.245}};
+    const BASE_INVESTMENTS = 3154750;
+    const CONTROL_DEFS = [{"key":"planChecks","label":"Плановые чеки в день","unit":"чеков в день","scale":1,"step":1,"note":"До применения выхода на план и сезонности."},{"key":"avgTicket","label":"Средний чек","unit":"руб. за чек","scale":1,"step":1,"note":"Далее индексируется по годам, как в Excel."},{"key":"rawShare","label":"Доля сырья и упаковки","unit":"% выручки","scale":100,"step":0.01,"note":"Меняется с разницей индексации цен и сырья."},{"key":"rent","label":"Аренда","unit":"руб. в месяц","scale":1,"step":1000,"note":"Без индексации, после арендных каникул."},{"key":"salaryFactor","label":"Уровень окладов","unit":"% от базовых окладов","scale":100,"step":1,"note":"Одинаковый коэффициент для всех должностей."},{"key":"deliveryShare","label":"Доля доставки","unit":"% выручки","scale":100,"step":0.01,"note":"Влияет на комиссию агрегатора и деньги в пути."},{"key":"investments","label":"Стартовые вложения","unit":"руб.","scale":1,"step":25,"note":"Ремонт, оборудование, прочие затраты, депозит, резерв и первоначальный запас."}];
+    const MODEL_ROWS = [{"section":"ВВОДНЫЕ И ДРАЙВЕРЫ"},{"key":"monthIndex","label":"Номер месяца модели","unit":"№","calculation":"Последовательно от 1 до выбранного горизонта","type":"number"},{"key":"date","label":"Календарный месяц","unit":"месяц","calculation":"Первый месяц из параметров, далее по календарю","type":"date"},{"key":"year","label":"Календарный год","unit":"год","calculation":"Определяется по календарному месяцу","type":"number"},{"key":"calendarMonth","label":"Номер календарного месяца","unit":"№","calculation":"Определяется по календарному месяцу","type":"number"},{"key":"monthsOpen","label":"Месяц после открытия","unit":"№","calculation":"До открытия — 0, затем порядковый номер","type":"number"},{"key":"isOpen","label":"Точка работает","unit":"0 / 1","calculation":"Единица начиная с месяца открытия","type":"number"},{"key":"scenario","label":"Выбранный сценарий","unit":"—","calculation":"Ссылка на переключатель листа «Сценарии»","type":"text"},{"key":"planChecks","label":"Плановые чеки в день","unit":"чеков","calculation":"Выбираются из сценарной таблицы","type":"number"},{"key":"baseTicket","label":"Базовый средний чек","unit":"руб.","calculation":"Выбирается из сценарной таблицы","type":"number"},{"key":"baseRawShare","label":"Базовая доля сырья и упаковки","unit":"% выручки","calculation":"Выбирается из сценарной таблицы","type":"percent"},{"key":"priceFactor","label":"Коэффициент индексации цен","unit":"коэффициент","calculation":"Накопленная индексация с 2027 года","type":"number"},{"key":"rawFactor","label":"Коэффициент индексации сырья","unit":"коэффициент","calculation":"Накопленная индексация с 2027 года","type":"number"},{"key":"otherFactor","label":"Коэффициент индексации прочих расходов","unit":"коэффициент","calculation":"Накопленная индексация с 2027 года","type":"number"},{"key":"tariffFactor","label":"Коэффициент индексации тарифов","unit":"коэффициент","calculation":"Накопленная индексация с 2027 года","type":"number"},{"key":"wageFactor","label":"Коэффициент индексации оплаты труда","unit":"коэффициент","calculation":"Накопленная индексация с 2027 года","type":"number"},{"key":"contribThreshold","label":"Порог льготного тарифа взносов","unit":"руб./мес.","calculation":"МРОТ × 1,5 с ежегодной индексацией","type":"number"},{"key":"ticket","label":"Средний чек месяца","unit":"руб.","calculation":"Базовый чек × индекс цен","type":"number"},{"key":"rawShare","label":"Доля сырья и упаковки месяца","unit":"% выручки","calculation":"Базовая доля × индекс сырья ÷ индекс цен","type":"percent"},{"key":"workDays","label":"Рабочие дни","unit":"дней","calculation":"Ссылка на лист «Параметры»","type":"number"},{"key":"ramp","label":"Выход на план","unit":"%","calculation":"Значение кривой по месяцу после открытия","type":"percent"},{"key":"season","label":"Сезонный коэффициент","unit":"коэффициент","calculation":"Значение для календарного месяца","type":"number"},{"key":"deliveryShare","label":"Доля доставки","unit":"% выручки","calculation":"Ссылка на лист «Параметры»","type":"percent"},{"key":"pointShare","label":"Доля продаж в точке","unit":"% выручки","calculation":"100% минус доля доставки","type":"percent"},{"key":"cashlessShare","label":"Доля безналичной оплаты в точке","unit":"% выручки точки","calculation":"Ссылка на лист «Параметры»","type":"percent"},{"section":"ОПиУ"},{"key":"checksDay","label":"Чеки в день","unit":"чеков","calculation":"Плановые чеки × выход на план × сезонность","type":"number"},{"key":"checksMonth","label":"Чеки за месяц","unit":"чеков","calculation":"Чеки в день × рабочие дни","type":"number"},{"key":"pointGross","label":"Продажи в точке, включая НДС","unit":"руб.","calculation":"Общие продажи × доля точки","type":"number"},{"key":"deliveryGross","label":"Продажи через доставку, включая НДС","unit":"руб.","calculation":"Общие продажи × доля доставки","type":"number"},{"key":"grossSales","label":"Продажи всего, включая НДС","unit":"руб.","calculation":"Чеки × средний чек","type":"number"},{"key":"vatActive","label":"Обязанность платить НДС","unit":"0 / 1","calculation":"Возникает с месяца после превышения установленного порога","type":"number"},{"key":"vatAmount","label":"НДС в продажах","unit":"руб.","calculation":"Выделяется из неизменной розничной цены по ставке 5%","type":"number"},{"key":"netRevenue","label":"Выручка без НДС","unit":"руб.","calculation":"Продажи всего минус НДС","type":"number"},{"key":"rawCost","label":"Сырьё и упаковка","unit":"руб.","calculation":"Продажи включая НДС × доля сырья и упаковки","type":"number"},{"key":"grossProfit","label":"Валовая прибыль","unit":"руб.","calculation":"Выручка без НДС минус сырьё и упаковка","type":"number"},{"key":"grossMargin","label":"Валовая рентабельность","unit":"%","calculation":"Валовая прибыль ÷ выручка без НДС","type":"percent"},{"key":"extraWriteoff","label":"Списания сверх технологических","unit":"руб.","calculation":"Продажи × норматив списаний","type":"number"},{"key":"aggregator","label":"Комиссия агрегатора","unit":"руб.","calculation":"Продажи доставки × ставка комиссии","type":"number"},{"key":"acquiring","label":"Эквайринг","unit":"руб.","calculation":"Безналичные продажи точки × ставка комиссии","type":"number"},{"key":"baker1Fte","label":"Пекарь-партнёр","unit":"человек","calculation":"Численность с месяца выхода","type":"number"},{"key":"baker2Fte","label":"Второй пекарь","unit":"человек","calculation":"Численность с месяца выхода","type":"number"},{"key":"sellerFte","label":"Продавцы-бариста","unit":"человек","calculation":"Численность с месяца выхода","type":"number"},{"key":"totalFte","label":"Численность всего","unit":"человек","calculation":"Сумма численности по должностям","type":"number"},{"key":"payroll","label":"Оплата труда","unit":"руб.","calculation":"Численность × оклад × индексация","type":"number"},{"key":"employerContrib","label":"Страховые взносы работодателя","unit":"руб.","calculation":"По каждому сотруднику: стандартный тариф до порога, льготный — сверх порога","type":"number"},{"key":"accident","label":"Страхование от несчастных случаев","unit":"руб.","calculation":"Оплата труда × ставка","type":"number"},{"key":"rent","label":"Аренда","unit":"руб.","calculation":"С начала аренды, после каникул, без индексации","type":"number"},{"key":"utilities","label":"Коммунальные услуги","unit":"руб.","calculation":"Сезонный тариф × индексация регулируемых тарифов","type":"number"},{"key":"marketing","label":"Маркетинг и продвижение","unit":"руб.","calculation":"С месяца начала маркетинга","type":"number"},{"key":"otherRegular","label":"Прочие регулярные расходы","unit":"руб.","calculation":"До открытия — подготовительный уровень, после — полный уровень","type":"number"},{"key":"equipmentDa","label":"Амортизация оборудования","unit":"руб.","calculation":"Стоимость ÷ срок полезного использования","type":"number"},{"key":"repairDa","label":"Списание ремонта","unit":"руб.","calculation":"Равномерно с открытия до конца выбранного горизонта","type":"number"},{"key":"ipFixedAccrual","label":"Фиксированные взносы ИП — начисление","unit":"руб.","calculation":"Годовая сумма равномерно по месяцам года","type":"number"},{"key":"ipExtraAccrual","label":"Дополнительный взнос ИП — начисление","unit":"руб.","calculation":"1% с годовой налоговой базы (доходы минус расходы без взносов ИП) свыше порога, п. 9 ст. 430 НК РФ","type":"number"},{"key":"opex","label":"Операционные расходы","unit":"руб.","calculation":"Сумма переменных, персонала, постоянных расходов и амортизации","type":"number"},{"key":"ebit","label":"Операционная прибыль","unit":"руб.","calculation":"Валовая прибыль минус операционные расходы","type":"number"},{"key":"ebitMargin","label":"Операционная рентабельность","unit":"%","calculation":"Операционная прибыль ÷ выручка без НДС","type":"percent"},{"key":"interestExpense","label":"Проценты по кредиту","unit":"руб.","calculation":"Остаток долга на начало × месячная ставка","type":"number"},{"key":"taxAssetDeduction","label":"Налоговое списание оборудования и ремонта","unit":"руб.","calculation":"Оборудование и неотделимые улучшения равными долями до конца года ввода, п. 3 ст. 346.16 НК РФ","type":"number"},{"key":"taxDeductible","label":"Расходы для УСН","unit":"руб.","calculation":"Денежные расходы, налоговое списание оборудования и ремонта, прочие расходы на запуск по оплате","type":"number"},{"key":"taxBase","label":"Налоговая база УСН","unit":"руб.","calculation":"Выручка без НДС минус расходы для УСН","type":"number"},{"key":"usnAccrued","label":"УСН — начисление","unit":"руб.","calculation":"Нарастающим итогом; в декабре не ниже 1% доходов","type":"number"},{"key":"netProfit","label":"Чистая прибыль","unit":"руб.","calculation":"Операционная прибыль минус проценты и УСН","type":"number"},{"section":"ОБОРОТНЫЙ КАПИТАЛ"},{"key":"inventoryOpen","label":"Запасы на начало","unit":"руб.","calculation":"Равны запасам на конец прошлого месяца","type":"number"},{"key":"inventoryClose","label":"Запасы на конец","unit":"руб.","calculation":"Норматив в днях; в первый месяц не ниже стартовой закупки","type":"number"},{"key":"inventoryChange","label":"Изменение запасов","unit":"руб.","calculation":"Запасы на конец минус запасы на начало","type":"number"},{"key":"arOpen","label":"Дебиторская задолженность на начало","unit":"руб.","calculation":"Равна задолженности на конец прошлого месяца","type":"number"},{"key":"arClose","label":"Дебиторская задолженность на конец","unit":"руб.","calculation":"Безналичная выручка × срок поступления ÷ рабочие дни","type":"number"},{"key":"arChange","label":"Изменение дебиторской задолженности","unit":"руб.","calculation":"Дебиторская задолженность на конец минус начало","type":"number"},{"key":"purchases","label":"Закупки сырья и упаковки","unit":"руб.","calculation":"Расход сырья и списания плюс изменение запасов","type":"number"},{"key":"apOpen","label":"Кредиторская задолженность на начало","unit":"руб.","calculation":"Равна задолженности на конец прошлого месяца","type":"number"},{"key":"apClose","label":"Кредиторская задолженность на конец","unit":"руб.","calculation":"Закупки × отсрочка поставщиков ÷ рабочие дни","type":"number"},{"key":"apChange","label":"Изменение кредиторской задолженности","unit":"руб.","calculation":"Кредиторская задолженность на конец минус начало","type":"number"},{"key":"nwc","label":"Чистый оборотный капитал","unit":"руб.","calculation":"Запасы + дебиторская задолженность − кредиторская задолженность","type":"number"},{"key":"nwcChange","label":"Изменение чистого оборотного капитала","unit":"руб.","calculation":"Чистый оборотный капитал на конец минус начало","type":"number"},{"section":"ОДДС — ОПЕРАЦИОННАЯ ДЕЯТЕЛЬНОСТЬ"},{"key":"cashReceipts","label":"Поступления от покупателей","unit":"руб.","calculation":"Продажи включая НДС минус изменение дебиторской задолженности","type":"number"},{"key":"rawPayments","label":"Оплата сырья и упаковки","unit":"руб.","calculation":"Закупки минус изменение кредиторской задолженности, со знаком минус","type":"number"},{"key":"commissionPayments","label":"Комиссии агрегатора и эквайринга","unit":"руб.","calculation":"Комиссии месяца, со знаком минус","type":"number"},{"key":"payrollPayments","label":"Выплаты персоналу","unit":"руб.","calculation":"ФОТ и страховые взносы, со знаком минус","type":"number"},{"key":"rentPayments","label":"Оплата аренды","unit":"руб.","calculation":"Аренда месяца, со знаком минус","type":"number"},{"key":"utilityPayments","label":"Оплата коммунальных услуг","unit":"руб.","calculation":"Коммунальные услуги месяца, со знаком минус","type":"number"},{"key":"marketingPayments","label":"Оплата маркетинга","unit":"руб.","calculation":"Маркетинг месяца, со знаком минус","type":"number"},{"key":"otherPayments","label":"Оплата прочих регулярных расходов","unit":"руб.","calculation":"Прочие расходы месяца, со знаком минус","type":"number"},{"key":"vatPayments","label":"Уплата НДС","unit":"руб.","calculation":"НДС прошлого квартала равными частями в следующие три месяца, окно квартала считается от первого дня","type":"number"},{"key":"usnPayments","label":"Уплата УСН","unit":"руб.","calculation":"Квартальные авансы и годовой платёж в установленные месяцы","type":"number"},{"key":"ipPayments","label":"Уплата взносов ИП","unit":"руб.","calculation":"Фиксированные — в декабре, дополнительные — в июле следующего года","type":"number"},{"key":"ocf","label":"Денежный поток от операционной деятельности","unit":"руб.","calculation":"Сумма операционных поступлений и платежей","type":"number"},{"section":"ОДДС — ИНВЕСТИЦИОННАЯ ДЕЯТЕЛЬНОСТЬ"},{"key":"repairCapex","label":"Ремонт и инженерная подготовка","unit":"руб.","calculation":"Фактический платёж в заданном месяце","type":"number"},{"key":"equipmentCapex","label":"Оборудование, мебель, витрины и касса","unit":"руб.","calculation":"Фактический платёж в заданном месяце","type":"number"},{"key":"otherLaunchCapex","label":"Прочие расходы на запуск","unit":"руб.","calculation":"Фактический платёж в заданном месяце","type":"number"},{"key":"depositCapex","label":"Обеспечительный платёж по аренде","unit":"руб.","calculation":"Фактический платёж в заданном месяце","type":"number"},{"key":"contingencyCapex","label":"Резерв непредвиденных вложений","unit":"руб.","calculation":"15% стартовой сметы как фактический платёж","type":"number"},{"key":"icf","label":"Денежный поток от инвестиционной деятельности","unit":"руб.","calculation":"Сумма инвестиционных платежей","type":"number"},{"section":"ОДДС — ФИНАНСОВАЯ ДЕЯТЕЛЬНОСТЬ"},{"key":"ownerFunds","label":"Взнос собственника","unit":"руб.","calculation":"Поступает в заданном месяце","type":"number"},{"key":"loanReceipt","label":"Получение кредита","unit":"руб.","calculation":"Фиксированная сумма поступает в заданном месяце","type":"number"},{"key":"debtOpen","label":"Остаток кредита на начало","unit":"руб.","calculation":"Остаток на конец прошлого месяца","type":"number"},{"key":"annuity","label":"Аннуитетный платёж","unit":"руб.","calculation":"Рассчитывается по сумме, ставке и сроку кредита","type":"number"},{"key":"interestPayment","label":"Уплата процентов","unit":"руб.","calculation":"Процентная часть аннуитета, со знаком минус","type":"number"},{"key":"principalPayment","label":"Погашение основного долга","unit":"руб.","calculation":"Оставшаяся часть аннуитета, со знаком минус","type":"number"},{"key":"debtClose","label":"Остаток кредита на конец","unit":"руб.","calculation":"Начальный долг + получение кредита − погашение","type":"number"},{"key":"guaranteePayment","label":"Комиссия гарантийного фонда","unit":"руб.","calculation":"1% кредита в месяц получения, со знаком минус","type":"number"},{"key":"cashBeforeOwner","label":"Деньги до выплаты собственнику","unit":"руб.","calculation":"Начальный остаток + все потоки до выплаты","type":"number"},{"key":"ownerPayout","label":"Выплата собственнику","unit":"руб.","calculation":"50 тыс. с 9-го месяца, только если сохраняется минимальный остаток","type":"number"},{"key":"fcf","label":"Денежный поток от финансовой деятельности","unit":"руб.","calculation":"Взносы, кредит, обслуживание долга и выплата собственнику","type":"number"},{"key":"netCashFlow","label":"Чистый денежный поток","unit":"руб.","calculation":"Операционный + инвестиционный + финансовый потоки","type":"number"},{"key":"cashOpen","label":"Остаток денег на начало","unit":"руб.","calculation":"В первом месяце ноль, далее остаток прошлого месяца","type":"number"},{"key":"cashClose","label":"Остаток денег на конец","unit":"руб.","calculation":"Остаток на начало + чистый денежный поток","type":"number"},{"key":"cashDeficit","label":"Дефицит до минимального остатка","unit":"руб.","calculation":"Максимум из нуля и разницы между минимальным и фактическим остатком","type":"number"},{"section":"ПОКАЗАТЕЛИ ПРОЕКТА И ТЕРМИНАЛЬНЫЙ РАСЧЁТ"},{"key":"projectCf","label":"Денежный поток проекта до финансирования","unit":"руб.","calculation":"Операционный + инвестиционный потоки","type":"number"},{"key":"projectCum","label":"Накопленный денежный поток проекта","unit":"руб.","calculation":"Нарастающий итог денежного потока проекта","type":"number"},{"key":"residualEquipment","label":"Остаточная стоимость оборудования","unit":"руб.","calculation":"Стоимость минус накопленная амортизация; только в конце горизонта","type":"number"},{"key":"depositReturn","label":"Возврат арендного депозита","unit":"руб.","calculation":"Возвращается только в терминальном расчёте","type":"number"},{"key":"nwcRecovery","label":"Возврат оборотного капитала","unit":"руб.","calculation":"Текущий оборотный капитал возвращается только в терминальном расчёте","type":"number"},{"key":"terminalRecovery","label":"Терминальное восстановление стоимости","unit":"руб.","calculation":"Остаточная стоимость + депозит + оборотный капитал","type":"number"},{"key":"valuationCf","label":"Денежный поток для NPV и IRR","unit":"руб.","calculation":"Поток проекта + терминальное восстановление стоимости","type":"number"},{"key":"fundingNeed","label":"Потребность в инвестициях","unit":"руб.","calculation":"Сколько нужно для покрытия накопленного потока и минимального остатка","type":"number"},{"key":"paybackMonth","label":"Месяц окупаемости","unit":"№ месяца","calculation":"Номер первого месяца, когда накопленный денежный поток проекта становится неотрицательным","type":"number"},{"section":"КОНТРОЛЬНЫЕ ПРОВЕРКИ"},{"key":"channelMix","label":"Микс каналов","unit":"%","calculation":"Доля точки + доля доставки","type":"percent"},{"key":"channelCheck","label":"Проверка микса каналов","unit":"статус","calculation":"ОК, если сумма долей равна 100%","type":"text"},{"key":"cashDiff","label":"Проверка остатка денег","unit":"руб.","calculation":"Остаток на конец − остаток на начало − чистый поток","type":"number"},{"key":"cashCheck","label":"Проверка движения денег","unit":"статус","calculation":"ОК, если контрольная разница в пределах допуска","type":"text"}];
+    const ANNUAL_ROWS = [{"key":"netRevenue","label":"Выручка","unit":"руб.","type":"money"},{"key":"grossProfit","label":"Валовая прибыль","unit":"руб.","type":"money"},{"key":"grossMargin","label":"Валовая рентабельность","unit":"%","type":"percent"},{"key":"ebit","label":"Операционная прибыль","unit":"руб.","type":"money"},{"key":"ebitMargin","label":"Операционная рентабельность","unit":"%","type":"percent"},{"key":"netProfit","label":"Чистая прибыль","unit":"руб.","type":"money"},{"key":"ocf","label":"Операционный денежный поток","unit":"руб.","type":"money"},{"key":"icf","label":"Инвестиционный денежный поток","unit":"руб.","type":"money"},{"key":"netCashFlow","label":"Чистый денежный поток","unit":"руб.","type":"money"},{"key":"cashClose","label":"Остаток денег на конец года","unit":"руб.","type":"money"}];
+    function addMonthsUTC(date, count) {
+  return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + count, 1));
+}
+    function endOfMonthUTC(date) {
+  return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + 1, 0));
+}
+    function startOfMonthUTC(date) {
+  return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1));
+}
+    function pmt(rate, nper, pv) {
+  if (rate === 0) return -(pv / nper);
+  const factor = Math.pow(1 + rate, nper);
+  return -(rate * pv * factor) / (factor - 1);
+}
+    function npv(rate, values) {
+  return values.reduce((sum, value, index) => sum + value / Math.pow(1 + rate, index + 1), 0);
+}
+    function irr(values, guess = 0.1) {
+  const f = rate => values.reduce((sum, value, index) => sum + value / Math.pow(1 + rate, index + 1), 0);
+  let low = -0.999999;
+  let high = Math.max(guess, 0.1);
+  let fLow = f(low);
+  let fHigh = f(high);
+  let guard = 0;
+  while (fLow * fHigh > 0 && high < 1e6 && guard < 200) {
+    high = high * 2 + 0.1;
+    fHigh = f(high);
+    guard += 1;
+  }
+  if (!Number.isFinite(fLow) || !Number.isFinite(fHigh) || fLow * fHigh > 0) return NaN;
+  for (let i = 0; i < 250; i++) {
+    const mid = (low + high) / 2;
+    const fMid = f(mid);
+    if (Math.abs(fMid) < 1e-9) return mid;
+    if (fLow * fMid <= 0) {
+      high = mid;
+      fHigh = fMid;
+    } else {
+      low = mid;
+      fLow = fMid;
+    }
+  }
+  return (low + high) / 2;
+}
+    function makeScenarioInputs(name) {
+  const scenario = SCENARIOS[name];
+  return {
+    scenario: name,
+    planChecks: scenario.planChecks,
+    avgTicket: scenario.avgTicket,
+    rawShare: scenario.rawShare,
+    rent: BASE_PARAMS.rent,
+    salaryFactor: 1,
+    deliveryShare: BASE_PARAMS.deliveryShare,
+    investments: BASE_INVESTMENTS,
+  };
+}
+    function calculateModel(inputs) {
+  const p = BASE_PARAMS;
+  const investmentScale = inputs.investments / BASE_INVESTMENTS;
+  const repair = p.repair * investmentScale;
+  const equipment = p.equipment * investmentScale;
+  const otherLaunch = p.otherLaunch * investmentScale;
+  const deposit = p.deposit * investmentScale;
+  const startupStock = p.startupStock * investmentScale;
+  const months = [];
+  const startDate = new Date(p.firstDate);
+  const annuityConstant = -pmt(p.loanRate / p.monthsYear, p.loanTerm, p.loanAmount);
+
+  const sum = (key, predicate = () => true) => months.reduce((acc, month) => predicate(month) ? acc + (Number(month[key]) || 0) : acc, 0);
+
+  for (let i = 0; i < p.horizon; i++) {
+    const monthIndex = i + 1;
+    const date = addMonthsUTC(startDate, i);
+    const year = date.getUTCFullYear();
+    const calendarMonth = date.getUTCMonth() + 1;
+    const monthsOpen = Math.max(0, monthIndex - p.openMonth + 1);
+    const isOpen = monthsOpen > 0 ? 1 : 0;
+    const priceFactor = Math.pow(1 + p.priceIndex, Math.max(0, year - p.taxAssetWriteoffYear));
+    const rawFactor = Math.pow(1 + p.rawIndex, Math.max(0, year - p.taxAssetWriteoffYear));
+    const otherFactor = rawFactor;
+    const tariffFactor = Math.pow(1 + p.tariffIndex, Math.max(0, year - p.taxAssetWriteoffYear));
+    const wageFactor = Math.pow(1 + p.wageIndex, Math.max(0, year - p.taxAssetWriteoffYear));
+    const contribThreshold = p.mrot2027 * p.mrotMultiple * wageFactor;
+    const ticket = inputs.avgTicket * priceFactor;
+    const rawShare = inputs.rawShare * rawFactor / priceFactor;
+    const ramp = isOpen ? p.ramp[Math.min(monthsOpen, p.ramp.length) - 1] : 0;
+    const season = p.season[calendarMonth - 1];
+    const deliveryShare = inputs.deliveryShare;
+    const pointShare = 1 - deliveryShare;
+
+    const loanReceipt = monthIndex === p.loanMonth ? p.loanAmount : 0;
+    const debtOpen = i === 0 ? 0 : months[i - 1].debtClose;
+    const paymentActive = monthIndex >= p.loanFirstPayment && monthIndex < p.loanFirstPayment + p.loanTerm && debtOpen > 0;
+    const annuity = paymentActive ? Math.min(debtOpen * (1 + p.loanRate / p.monthsYear), annuityConstant) : 0;
+    const interestPayment = -Math.min(annuity, debtOpen * p.loanRate / p.monthsYear);
+    const principalPayment = -Math.max(0, annuity + interestPayment);
+    const debtClose = Math.max(0, debtOpen + loanReceipt + principalPayment);
+    const guaranteePayment = monthIndex === p.loanMonth ? -p.loanAmount * p.guaranteeFee : 0;
+
+    const repairCapex = monthIndex === p.repairPayMonth ? -repair : 0;
+    const equipmentCapex = monthIndex === p.equipmentPayMonth ? -equipment : 0;
+    const otherLaunchCapex = monthIndex === p.otherLaunchPayMonth ? -otherLaunch : 0;
+    const depositCapex = monthIndex === p.depositPayMonth ? -deposit : 0;
+    const contingencyCapex = monthIndex === p.contingencyPayMonth ? -(repair + equipment + otherLaunch) * p.contingencyRate : 0;
+    const icf = repairCapex + equipmentCapex + otherLaunchCapex + depositCapex + contingencyCapex;
+
+    const checksDay = inputs.planChecks * ramp * season;
+    const checksMonth = checksDay * p.workDays;
+    const grossSales = checksMonth * ticket;
+    const pointGross = grossSales * pointShare;
+    const deliveryGross = grossSales * deliveryShare;
+    const threshold = year < p.vatChangeYear ? p.vatThresholdBeforeChange : p.vatThresholdAfterChange;
+    const prevYearSales = sum('grossSales', m => m.year === year - 1);
+    const currentYearSalesBefore = sum('grossSales', m => m.year === year);
+    const vatActive = (prevYearSales > threshold || currentYearSalesBefore > threshold) ? 1 : 0;
+    const vatAmount = grossSales * vatActive * p.vatRate / (1 + p.vatRate);
+    const netRevenue = grossSales - vatAmount;
+    const rawCost = grossSales * rawShare;
+    const grossProfit = netRevenue - rawCost;
+    const grossMargin = netRevenue === 0 ? 0 : grossProfit / netRevenue;
+    const extraWriteoff = grossSales * p.extraWriteoff;
+    const aggregator = deliveryGross * p.aggregatorFee;
+    const acquiring = pointGross * p.cashlessShare * p.acquiringFee;
+
+    const baker1Fte = monthIndex >= p.baker1Start ? p.baker1Count : 0;
+    const baker2Fte = monthIndex >= p.baker2Start ? p.baker2Count : 0;
+    const sellerFte = monthIndex >= p.sellerStart ? p.sellerCount : 0;
+    const totalFte = baker1Fte + baker2Fte + sellerFte;
+    const baker1Salary = p.baker1Salary * inputs.salaryFactor;
+    const baker2Salary = p.baker2Salary * inputs.salaryFactor;
+    const sellerSalary = p.sellerSalary * inputs.salaryFactor;
+    const payroll = (baker1Fte * baker1Salary + baker2Fte * baker2Salary + sellerFte * sellerSalary) * wageFactor;
+    const contributionFor = (fte, salary) => fte * (
+      Math.min(salary * wageFactor, contribThreshold) * p.contribStd +
+      Math.max(0, salary * wageFactor - contribThreshold) * p.contribReduced
+    );
+    const employerContrib = contributionFor(baker1Fte, baker1Salary) + contributionFor(baker2Fte, baker2Salary) + contributionFor(sellerFte, sellerSalary);
+    const accident = payroll * p.accidentRate;
+    const rent = monthIndex >= p.rentStart + p.rentHoliday ? inputs.rent : 0;
+    const utilityBase = calendarMonth >= 11 || calendarMonth <= 3 ? p.utilityWinter :
+      (calendarMonth <= 5 || calendarMonth >= 9 ? p.utilityShoulder : p.utilitySummer);
+    const utilities = monthIndex >= p.utilityStart ? utilityBase * tariffFactor : 0;
+    const marketing = monthIndex >= p.marketingStart ? p.marketing * otherFactor : 0;
+    const otherRegular = (monthIndex >= p.otherFullStart ? p.otherRegular : p.otherPreopen) * otherFactor;
+    const equipmentDa = monthIndex >= p.equipmentStart ? equipment / p.equipmentLife : 0;
+    const repairDa = monthIndex >= p.repairAmortStart ? repair / (p.horizon - p.repairAmortStart + 1) : 0;
+    const ipFixedAccrual = year >= p.taxAssetWriteoffYear ? p.ipFixed2027 * Math.pow(1 + p.ipFixedIndex, year - p.taxAssetWriteoffYear) / p.monthsYear : 0;
+    const interestExpense = -interestPayment;
+    const taxAssetDeduction = year === p.taxAssetWriteoffYear ? (equipment + repair) / p.monthsYear : 0;
+
+    const extraContributionBase = netRevenue - rawCost - extraWriteoff - aggregator - acquiring - payroll - employerContrib - accident - rent - utilities - marketing - otherRegular - interestExpense - taxAssetDeduction + otherLaunchCapex;
+    const cumulativeExtraBase = sum('extraContributionBase', m => m.year === year) + extraContributionBase;
+    const priorExtra = sum('ipExtraAccrual', m => m.year === year);
+    const ipExtraTarget = Math.max(0, (Math.max(0, cumulativeExtraBase) - p.ipExtraThreshold) * p.ipExtraRate);
+    const ipExtraAccrual = Math.max(0, ipExtraTarget - priorExtra);
+
+    const opex = extraWriteoff + aggregator + acquiring + payroll + employerContrib + accident + rent + utilities + marketing + otherRegular + equipmentDa + repairDa + ipFixedAccrual + ipExtraAccrual;
+    const ebit = grossProfit - opex;
+    const ebitMargin = netRevenue === 0 ? 0 : ebit / netRevenue;
+    const taxDeductible = rawCost + extraWriteoff + aggregator + acquiring + payroll + employerContrib + accident + rent + utilities + marketing + otherRegular + ipFixedAccrual + ipExtraAccrual + interestExpense + taxAssetDeduction - otherLaunchCapex;
+    const taxBase = netRevenue - taxDeductible;
+    const cumulativeTaxBase = sum('taxBase', m => m.year === year) + taxBase;
+    const cumulativeNetRevenue = sum('netRevenue', m => m.year === year) + netRevenue;
+    const priorUsn = sum('usnAccrued', m => m.year === year);
+    const usnTarget = calendarMonth === 12 ?
+      Math.max(Math.max(0, cumulativeTaxBase) * p.usnRate, cumulativeNetRevenue * p.usnMinRate) :
+      Math.max(0, cumulativeTaxBase) * p.usnRate;
+    const usnAccrued = usnTarget - priorUsn;
+    const netProfit = ebit - interestExpense - usnAccrued;
+
+    const inventoryOpen = i === 0 ? 0 : months[i - 1].inventoryClose;
+    let inventoryClose = 0;
+    if (monthIndex === p.startupStockMonth) inventoryClose = Math.max(startupStock, rawCost / p.workDays * p.inventoryDays);
+    else if (monthIndex > p.startupStockMonth) inventoryClose = rawCost / p.workDays * p.inventoryDays;
+    const inventoryChange = inventoryClose - inventoryOpen;
+    const arOpen = i === 0 ? 0 : months[i - 1].arClose;
+    const arClose = (pointGross * p.cashlessShare + deliveryGross) / p.workDays * p.collectionDays;
+    const arChange = arClose - arOpen;
+    const purchases = rawCost + extraWriteoff + inventoryChange;
+    const apOpen = i === 0 ? 0 : months[i - 1].apClose;
+    const apClose = Math.max(0, purchases) / p.workDays * p.supplierDays;
+    const apChange = apClose - apOpen;
+    const nwc = inventoryClose + arClose - apClose;
+    const nwcChange = nwc - (i === 0 ? 0 : months[i - 1].nwc);
+
+    const cashReceipts = grossSales - arChange;
+    const rawPayments = -(purchases - apChange);
+    const commissionPayments = -(aggregator + acquiring);
+    const payrollPayments = -(payroll + employerContrib + accident);
+    const rentPayments = -rent;
+    const utilityPayments = -utilities;
+    const marketingPayments = -marketing;
+    const otherPayments = -otherRegular;
+
+    const priorQuarterEnd = endOfMonthUTC(addMonthsUTC(date, -(calendarMonth - 1) % p.vatPayParts - 1));
+    const priorQuarterStart = startOfMonthUTC(addMonthsUTC(priorQuarterEnd, -(p.vatPayParts - 1)));
+    const vatQuarter = sum('vatAmount', m => m.date >= priorQuarterStart && m.date <= priorQuarterEnd);
+    const vatPayments = -vatQuarter / p.vatPayParts;
+
+    let usnPaymentBase = 0;
+    if (calendarMonth === 4) {
+      const from = new Date(Date.UTC(year - 1, 9, 1));
+      const to = new Date(Date.UTC(year, 3, 1));
+      usnPaymentBase = sum('usnAccrued', m => m.date >= from && m.date < to);
+    } else if (calendarMonth === 7) {
+      const from = new Date(Date.UTC(year, 3, 1));
+      const to = new Date(Date.UTC(year, 6, 1));
+      usnPaymentBase = sum('usnAccrued', m => m.date >= from && m.date < to);
+    } else if (calendarMonth === 10) {
+      const from = new Date(Date.UTC(year, 6, 1));
+      const to = new Date(Date.UTC(year, 9, 1));
+      usnPaymentBase = sum('usnAccrued', m => m.date >= from && m.date < to);
+    }
+    const usnPayments = -usnPaymentBase;
+    const fixedCurrent = calendarMonth === 12 ? sum('ipFixedAccrual', m => m.year === year) + ipFixedAccrual : 0;
+    const extraPrior = calendarMonth === 7 ? sum('ipExtraAccrual', m => m.year === year - 1) : 0;
+    const ipPayments = -(fixedCurrent + extraPrior);
+    const ocf = cashReceipts + rawPayments + commissionPayments + payrollPayments + rentPayments + utilityPayments + marketingPayments + otherPayments + vatPayments + usnPayments + ipPayments;
+
+    const ownerFunds = monthIndex === p.ownFundsMonth ? p.ownFunds : 0;
+    const cashOpen = i === 0 ? 0 : months[i - 1].cashClose;
+    const cashBeforeOwner = cashOpen + ocf + icf + ownerFunds + loanReceipt + interestPayment + principalPayment + guaranteePayment;
+    const ownerPayout = monthIndex >= p.ownerPayoutStart && cashBeforeOwner - p.ownerPayout >= p.minCash ? -p.ownerPayout : 0;
+    const fcf = ownerFunds + loanReceipt + interestPayment + principalPayment + guaranteePayment + ownerPayout;
+    const netCashFlow = ocf + icf + fcf;
+    const cashClose = cashOpen + netCashFlow;
+    const cashDeficit = Math.max(0, p.minCash - cashClose);
+    const projectCf = ocf + icf;
+    const projectCum = (i === 0 ? 0 : months[i - 1].projectCum) + projectCf;
+    const residualEquipment = monthIndex === p.horizon ? Math.max(0, equipment - (sum('equipmentDa') + equipmentDa)) : 0;
+    const depositReturn = monthIndex === p.horizon ? deposit : 0;
+    const nwcRecovery = monthIndex === p.horizon ? Math.max(0, nwc) : 0;
+    const terminalRecovery = residualEquipment + depositReturn + nwcRecovery;
+    const valuationCf = projectCf + terminalRecovery;
+    const fundingNeed = Math.max(0, p.minCash - projectCum);
+    const paybackMonth = projectCum >= 0 && (i === 0 || months[i - 1].projectCum < 0) ? monthIndex : null;
+    const channelMix = pointShare + deliveryShare;
+    const channelCheck = Math.abs(channelMix - 1) < p.cashTolerance / 100 ? 'ОК' : 'ОШИБКА';
+    const cashDiff = cashClose - cashOpen - netCashFlow;
+    const cashCheck = Math.abs(cashDiff) <= p.cashTolerance ? 'ОК' : 'ОШИБКА';
+
+    months.push({
+      monthIndex, date, year, calendarMonth, monthsOpen, isOpen, scenario: inputs.scenario,
+      planChecks: inputs.planChecks, baseTicket: inputs.avgTicket, baseRawShare: inputs.rawShare,
+      priceFactor, rawFactor, otherFactor, tariffFactor, wageFactor, contribThreshold, ticket, rawShare,
+      workDays: p.workDays, ramp, season, deliveryShare, pointShare, cashlessShare: p.cashlessShare,
+      checksDay, checksMonth, pointGross, deliveryGross, grossSales, vatActive, vatAmount, netRevenue,
+      rawCost, grossProfit, grossMargin, extraWriteoff, aggregator, acquiring,
+      baker1Fte, baker2Fte, sellerFte, totalFte, payroll, employerContrib, accident, rent, utilities,
+      marketing, otherRegular, equipmentDa, repairDa, ipFixedAccrual, extraContributionBase,
+      ipExtraAccrual, opex, ebit, ebitMargin, interestExpense, taxAssetDeduction, taxDeductible,
+      taxBase, usnAccrued, netProfit,
+      inventoryOpen, inventoryClose, inventoryChange, arOpen, arClose, arChange, purchases,
+      apOpen, apClose, apChange, nwc, nwcChange,
+      cashReceipts, rawPayments, commissionPayments, payrollPayments, rentPayments, utilityPayments,
+      marketingPayments, otherPayments, vatPayments, usnPayments, ipPayments, ocf,
+      repairCapex, equipmentCapex, otherLaunchCapex, depositCapex, contingencyCapex, icf,
+      ownerFunds, loanReceipt, debtOpen, annuity, interestPayment, principalPayment, debtClose,
+      guaranteePayment, cashBeforeOwner, ownerPayout, fcf, netCashFlow, cashOpen, cashClose, cashDeficit,
+      projectCf, projectCum, residualEquipment, depositReturn, nwcRecovery, terminalRecovery,
+      valuationCf, fundingNeed, paybackMonth, channelMix, channelCheck, cashDiff, cashCheck,
+    });
+  }
+
+  const years = [...new Set(months.map(m => m.year))];
+  const annual = years.map(year => {
+    const rows = months.filter(m => m.year === year);
+    const total = key => rows.reduce((acc, row) => acc + (Number(row[key]) || 0), 0);
+    const netRevenue = total('netRevenue');
+    const grossProfit = total('grossProfit');
+    const ebit = total('ebit');
+    return {
+      year,
+      netRevenue,
+      grossProfit,
+      grossMargin: netRevenue === 0 ? 0 : grossProfit / netRevenue,
+      ebit,
+      ebitMargin: netRevenue === 0 ? 0 : ebit / netRevenue,
+      netProfit: total('netProfit'),
+      ocf: total('ocf'),
+      icf: total('icf'),
+      netCashFlow: total('netCashFlow'),
+      cashClose: rows[rows.length - 1].cashClose,
+    };
+  });
+  const investmentNeed = Math.max(...months.map(m => m.fundingNeed));
+  const payback = months.find(m => m.paybackMonth !== null)?.paybackMonth ?? null;
+  // Лист «Сценарии» использует год из ячейки E13 — второй полный
+  // календарный год после неполного стартового периода (для текущей модели: 2028).
+  const secondYear = annual[2];
+  const endingCash = months[months.length - 1].cashClose;
+  const availableFinancing = p.ownFunds + p.loanAmount;
+  const financingGap = Math.max(0, investmentNeed - availableFinancing);
+  const monthlyDiscountRate = Math.pow(1 + p.discountRate, 1 / p.monthsYear) - 1;
+  const npvValue = npv(monthlyDiscountRate, months.map(m => m.valuationCf));
+  const monthlyIrr = irr(months.map(m => m.valuationCf));
+  const annualIrr = Number.isFinite(monthlyIrr) ? Math.pow(1 + monthlyIrr, p.monthsYear) - 1 : NaN;
+  return {
+    inputs, months, annual,
+    metrics: {
+      investmentNeed,
+      payback,
+      secondYearProfit: secondYear?.netProfit ?? 0,
+      endingCash,
+      availableFinancing,
+      financingGap,
+      financingEnough: financingGap <= 1e-6,
+      npv: npvValue,
+      irr: annualIrr,
+    },
+  };
+}
+
+    const fmtMoney = new Intl.NumberFormat('ru-RU', {maximumFractionDigits:0});
+    const fmtOne = new Intl.NumberFormat('ru-RU', {minimumFractionDigits:1,maximumFractionDigits:1});
+    const fmtInput = new Intl.NumberFormat('ru-RU', {maximumFractionDigits:3,useGrouping:false});
+    const monthFormatter = new Intl.DateTimeFormat('ru-RU', {month:'short',year:'2-digit',timeZone:'UTC'});
+    let selectedScenario = 'Базовый';
+    let state = makeScenarioInputs(selectedScenario);
+    let result = calculateModel(state);
+
+    function scenarioDefaults(name){ return makeScenarioInputs(name); }
+    function getRangeBase(def){ return scenarioDefaults(selectedScenario)[def.key]; }
+    function displayValue(def,value){ return value * def.scale; }
+    function storedValue(def,value){ return value / def.scale; }
+    function clamp(value,min,max){ return Math.min(max,Math.max(min,value)); }
+    function formatControl(def,value){
+      const displayed=displayValue(def,value);
+      return def.step < 1 ? displayed.toFixed(1) : String(Math.round(displayed));
+    }
+    function deltaText(value,base){ const delta=(value/base-1)*100; return (Math.abs(delta)<0.00001?'0%':(delta>0?'+':'')+fmtOne.format(delta)+'%'); }
+    function valueClass(value){ return value<0?'negative':''; }
+    function formatCell(value,type){
+      if(value===null||value===undefined||value==='')return '—';
+      if(type==='date')return monthFormatter.format(value).replace('.','');
+      if(type==='percent')return fmtOne.format(Number(value)*100)+'%';
+      if(type==='text')return String(value);
+      return fmtMoney.format(Number(value));
+    }
+    function formatRub(value){ return fmtMoney.format(value)+' ₽'; }
+
+    function scenarioComparison(){
+      const selectedBase=scenarioDefaults(selectedScenario);
+      const factors={};
+      CONTROL_DEFS.forEach(def=>{factors[def.key]=selectedBase[def.key]===0?1:state[def.key]/selectedBase[def.key];});
+      return Object.keys(SCENARIOS).map(name=>{
+        const inputs=scenarioDefaults(name);
+        CONTROL_DEFS.forEach(def=>{inputs[def.key]*=factors[def.key];});
+        inputs.scenario=name;
+        return {name,inputs,result:calculateModel(inputs)};
+      });
+    }
+
+    function sensitivityRanking(){
+      const keys=['planChecks','avgTicket','rawShare','rent','salaryFactor'];
+      return keys.map(key=>{
+        const def=CONTROL_DEFS.find(item=>item.key===key);
+        const minus={...state,[key]:state[key]*.9};
+        const plus={...state,[key]:state[key]*1.1};
+        const minusProfit=calculateModel(minus).metrics.secondYearProfit;
+        const plusProfit=calculateModel(plus).metrics.secondYearProfit;
+        return {key,label:def.label,minusProfit,plusProfit,difference:plusProfit-minusProfit,impact:Math.abs(plusProfit-minusProfit)};
+      }).sort((a,b)=>b.impact-a.impact);
+    }
+
+    function boundaryFor(key,metric){
+      const evaluate=value=>{
+        const trial=calculateModel({...state,[key]:value});
+        if(metric==='profit')return trial.metrics.secondYearProfit;
+        return trial.months[trial.months.length-1].projectCum;
+      };
+      let low=0,high=Math.max(state[key]*2,1),fLow=evaluate(low),fHigh=evaluate(high),guard=0;
+      if(fLow>=0)return 0;
+      while(fHigh<0&&guard<30){high*=1.5;fHigh=evaluate(high);guard+=1;}
+      if(fHigh<0)return null;
+      for(let i=0;i<70;i++){const mid=(low+high)/2;const fMid=evaluate(mid);if(fMid>=0)high=mid;else low=mid;}
+      return high;
+    }
+
+    function analysisData(){
+      const comparisons=scenarioComparison();
+      const ranking=sensitivityRanking();
+      const boundaries=['planChecks','avgTicket'].map(key=>({
+        key,
+        label:CONTROL_DEFS.find(item=>item.key===key).label,
+        profit:boundaryFor(key,'profit'),
+        payback:boundaryFor(key,'payback'),
+      }));
+      const sources=[
+        {parameter:'Плановые чеки в день',value:fmtMoney.format(state.planChecks)+' чеков в день',source:'Оценка по аналогам, Коммерсантъ, 13.07.2026',status:'Ждёт проверки трафика точки'},
+        {parameter:'Средний чек',value:formatRub(state.avgTicket),source:'Ответ клиента',status:'Согласовано клиентом'},
+        {parameter:'Доля сырья и упаковки',value:fmtOne.format(state.rawShare*100)+'%',source:'Типовые техкарты и цены Казани',status:'Ждёт техкарт клиента'},
+        {parameter:'Доля доставки',value:fmtOne.format(state.deliveryShare*100)+'%',source:'Рыночная оценка по формату',status:'Ждёт уточнения клиента'},
+        {parameter:'Аренда',value:formatRub(state.rent)+' в месяц',source:'Ответ клиента',status:'Согласовано клиентом'},
+        {parameter:'Штат',value:'2 пекаря и 2 продавца-бариста',source:'Ответ клиента и требования к графику',status:'Ждёт подтверждения графика'},
+        {parameter:'Оклад пекаря / бариста',value:formatRub(BASE_PARAMS.baker1Salary*state.salaryFactor)+' / '+formatRub(BASE_PARAMS.sellerSalary*state.salaryFactor),source:'Ответ клиента, пересчёт до начисления',status:'Ждёт подтверждения клиента'},
+        {parameter:'Стартовые вложения',value:formatRub(state.investments),source:'Ответ клиента и рыночные оценки сметы',status:'Ждёт коммерческих предложений'},
+        {parameter:'Собственные средства',value:formatRub(BASE_PARAMS.ownFunds),source:'Ответ клиента',status:'Согласовано клиентом'},
+        {parameter:'Кредит',value:formatRub(BASE_PARAMS.loanAmount)+' под '+fmtOne.format(BASE_PARAMS.loanRate*100)+'%',source:'Ответ клиента и условие модели',status:'Ждёт предложения банка'},
+      ];
+      return {comparisons,ranking,boundaries,sources};
+    }
+
+    function renderAnalyticalNote(){
+      const m=result.metrics;const data=analysisData();const gap=m.financingGap;
+      const scenarioCards=data.comparisons.map(item=>'<div class="note-stat">'+item.name+'<strong>'+formatRub(item.result.metrics.secondYearProfit)+'</strong><span>'+fmtMoney.format(item.inputs.planChecks)+' чеков/день · '+formatRub(item.inputs.avgTicket)+' · сырьё '+fmtOne.format(item.inputs.rawShare*100)+'%</span></div>').join('');
+      const rankItems=data.ranking.map((item,index)=>'<li>'+(index+1)+'. '+item.label+': изменение на ±10% даёт разницу чистой прибыли '+formatRub(item.impact)+'; рост параметра '+(item.difference>=0?'увеличивает':'уменьшает')+' результат.</li>').join('');
+      const boundaryRows=data.boundaries.map(item=>'<tr><td>'+item.label+'</td><td>'+(item.profit===null?'Нет границы в расчётном диапазоне':(item.key==='planChecks'?fmtOne.format(item.profit)+' чеков в день':formatRub(item.profit)))+'</td><td>'+(item.payback===null?'Нет границы в расчётном диапазоне':(item.key==='planChecks'?fmtOne.format(item.payback)+' чеков в день':formatRub(item.payback)))+'</td></tr>').join('');
+      const sourceRows=data.sources.map(item=>'<tr><td>'+item.parameter+'</td><td>'+item.value+'</td><td>'+item.source+'</td><td class="'+(item.status.startsWith('Ждёт')?'status-wait':'')+'">'+item.status+'</td></tr>').join('');
+      document.getElementById('noteContent').innerHTML=
+        '<h3>1. Проект и задача</h3><p>Модель оценивает 1 пекарню полного цикла площадью 60 м² в Казани на горизонте 36 месяцев; открытие предусмотрено в месяце 3.</p><p>Цель расчёта — определить для 3 сценариев потребность в деньгах, месяц окупаемости и финансовый результат владельца.</p>'+
+        '<h3>2. Текущий расчёт</h3><p>Потребность в инвестициях составляет '+formatRub(m.investmentNeed)+', окупаемость наступает '+(m.payback?'в месяце '+m.payback:'позже месяца '+BASE_PARAMS.horizon)+', чистая прибыль второго полного года — '+formatRub(m.secondYearProfit)+'.</p><p>Остаток денег в конце месяца '+BASE_PARAMS.horizon+' составляет '+formatRub(m.endingCash)+'.</p>'+
+        '<h3>3. Финансирование</h3><p>В расчёте доступно '+formatRub(m.availableFinancing)+': '+formatRub(BASE_PARAMS.ownFunds)+' собственных средств и '+formatRub(BASE_PARAMS.loanAmount)+' кредита.</p><p>'+(m.financingEnough?'Потребность '+formatRub(m.investmentNeed)+' укладывается в доступные '+formatRub(m.availableFinancing)+'.':'При потребности '+formatRub(m.investmentNeed)+' против '+formatRub(m.availableFinancing)+' не хватает '+formatRub(gap)+'.')+'</p>'+
+        '<h3>4. Три сценария</h3><div class="note-grid">'+scenarioCards+'</div><p>3 сценария различаются количеством чеков, средним чеком и долей сырья; остальные текущие изменения применены одинаково.</p>'+
+        '<h3>5. Чувствительность результата</h3><ol>'+rankItems+'</ol>'+
+        '<h3>6. Расчётные границы</h3><p>Для 2 главных драйверов границы пересчитываются при каждом изменении остальных параметров.</p><div class="table-card"><div class="table-scroll"><table><thead><tr><th>Параметр</th><th>Чистая прибыль 2-го года = 0</th><th>Окупаемость на границе 36 месяцев</th></tr></thead><tbody>'+boundaryRows+'</tbody></table></div></div>'+
+        '<h3>7. Откуда взяты цифры</h3><div class="table-card"><div class="table-scroll"><table class="source-table"><thead><tr><th>Параметр</th><th>Текущее значение</th><th>Источник</th><th>Статус</th></tr></thead><tbody>'+sourceRows+'</tbody></table></div></div>'+
+        '<h3>8. Что проверить до старта</h3><ul><li>1. Проверить поток у помещения не менее 5 дней и сопоставить его с '+fmtMoney.format(state.planChecks)+' чеками в день.</li><li>2. Получить техкарты для 8–10 позиций и проверить долю сырья '+fmtOne.format(state.rawShare*100)+'%.</li><li>3. Подтвердить смету вложений '+formatRub(state.investments)+' коммерческими предложениями.</li><li>4. Подтвердить кредит '+formatRub(BASE_PARAMS.loanAmount)+' и ставку '+fmtOne.format(BASE_PARAMS.loanRate*100)+'% предложением банка.</li></ul>'+
+        '<h3>9. Что контролировать после открытия</h3><ul><li>1. Еженедельно сравнивать фактические чеки с планом '+fmtMoney.format(state.planChecks)+' в день.</li><li>2. Ежемесячно сверять средний чек '+formatRub(state.avgTicket)+' и долю сырья '+fmtOne.format(state.rawShare*100)+'%.</li><li>3. Поддерживать минимальный остаток денег '+formatRub(BASE_PARAMS.minCash)+'.</li><li>4. Через 12 месяцев заменить 12 сезонных коэффициентов фактическими данными.</li></ul>';
+    }
+
+    function renderControls(){
+      const holder=document.getElementById('controls');
+      holder.innerHTML=CONTROL_DEFS.map(def=>{
+        const base=getRangeBase(def); const min=base*.7; const max=base*1.3; const current=clamp(state[def.key],min,max); state[def.key]=current;
+        const dMin=displayValue(def,min); const dMax=displayValue(def,max); const dValue=displayValue(def,current);
+        return '<article class="control-card" data-key="'+def.key+'"><div class="control-top"><div class="control-label">'+def.label+'</div><span class="delta">'+deltaText(current,base)+'</span></div><div class="input-line"><input aria-label="'+def.label+'" type="range" min="'+dMin+'" max="'+dMax+'" step="'+def.step+'" value="'+dValue+'"><label class="number-wrap"><input aria-label="Точное значение: '+def.label+'" type="number" min="'+dMin+'" max="'+dMax+'" step="'+def.step+'" value="'+formatControl(def,current)+'"><span>'+def.unit+'</span></label></div><div class="control-note">'+def.note+'</div></article>';
+      }).join('');
+      holder.querySelectorAll('.control-card').forEach(card=>{
+        const def=CONTROL_DEFS.find(item=>item.key===card.dataset.key); const range=card.querySelector('input[type=range]'); const number=card.querySelector('input[type=number]');
+        const apply=value=>{ const min=Number(number.min),max=Number(number.max); const displayed=clamp(Number(value),min,max); range.value=displayed; number.value=displayed; state[def.key]=storedValue(def,displayed); card.querySelector('.delta').textContent=deltaText(state[def.key],getRangeBase(def)); update(); };
+        range.addEventListener('input',()=>apply(range.value)); number.addEventListener('input',()=>{if(number.value!=='')apply(number.value)});
+      });
+    }
+
+    function setScenario(name){
+      selectedScenario=name; state=scenarioDefaults(name);
+      document.querySelectorAll('.scenario-btn').forEach(button=>button.classList.toggle('active',button.dataset.scenario===name));
+      renderControls(); update();
+    }
+
+    function renderKpis(){
+      const m=result.metrics; document.getElementById('investmentNeed').textContent=formatRub(m.investmentNeed); document.getElementById('payback').textContent=m.payback?m.payback+' месяц':'Не наступила';
+      document.getElementById('secondYearProfit').textContent=formatRub(m.secondYearProfit); document.getElementById('secondYearProfit').className='kpi-value '+valueClass(m.secondYearProfit); document.getElementById('secondYearLabel').textContent='Второй полный год — '+result.annual[2].year;
+      document.getElementById('endingCash').textContent=formatRub(m.endingCash); document.getElementById('endingCash').className='kpi-value '+valueClass(m.endingCash);
+      const card=document.getElementById('financingCard'); card.classList.toggle('good',m.financingEnough); card.classList.toggle('bad',!m.financingEnough); document.getElementById('financingStatus').textContent=m.financingEnough?'Хватает':'Не хватает '+formatRub(m.financingGap); document.getElementById('financingSub').textContent='Доступно '+formatRub(m.availableFinancing);
+      document.getElementById('npvValue').textContent=formatRub(m.npv); document.getElementById('irrValue').textContent=Number.isFinite(m.irr)?fmtOne.format(m.irr*100)+'%':'Не рассчитывается';
+      const changed=CONTROL_DEFS.some(def=>Math.abs(state[def.key]-getRangeBase(def))>1e-9); document.getElementById('stateNote').textContent=selectedScenario+(changed?' · параметры изменены':' сценарий');
+    }
+
+    function renderAnnualTable(){
+      const years=result.annual.map(row=>row.year); let html='<thead><tr><th>Показатель</th><th>Единица</th>'+years.map(year=>'<th>'+year+'</th>').join('')+'</tr></thead><tbody>';
+      for(const row of ANNUAL_ROWS){ html+='<tr><td>'+row.label+'</td><td>'+row.unit+'</td>'+result.annual.map(year=>{const value=year[row.key];const text=row.type==='percent'?fmtOne.format(value*100)+'%':fmtMoney.format(value);return '<td class="'+valueClass(value)+'">'+text+'</td>';}).join('')+'</tr>'; }
+      document.getElementById('annualTable').innerHTML=html+'</tbody>';
+    }
+
+    function renderMonthlyTable(){
+      let html='<thead><tr><th>Строка</th><th>Единица</th>'+result.months.map(m=>'<th>'+monthFormatter.format(m.date).replace('.','')+'</th>').join('')+'</tr></thead><tbody>';
+      for(const row of MODEL_ROWS){
+        if(row.section){html+='<tr class="section-row"><td class="section-cell" colspan="'+(result.months.length+2)+'">'+row.section+'</td></tr>';continue;}
+        html+='<tr title="'+row.calculation.replaceAll('&','&amp;').replaceAll('"','&quot;')+'"><td>'+row.label+'</td><td>'+row.unit+'</td>'+result.months.map(month=>{const value=month[row.key];return '<td class="'+(typeof value==='number'?valueClass(value):'')+'">'+formatCell(value,row.type)+'</td>';}).join('')+'</tr>';
+      }
+      document.getElementById('monthlyTable').innerHTML=html+'</tbody>';
+    }
+
+    function lineChart(){
+      const values=result.months.map(m=>m.projectCum); const W=920,H=330,L=76,R=22,T=22,B=52; const min=Math.min(0,...values),max=Math.max(0,...values); const span=max-min||1; const x=i=>L+i*(W-L-R)/(values.length-1); const y=v=>T+(max-v)*(H-T-B)/span;
+      const path=values.map((v,i)=>(i?'L':'M')+x(i).toFixed(1)+','+y(v).toFixed(1)).join(' '); let grid=''; for(let i=0;i<=4;i++){const val=min+span*i/4;const yy=y(val);grid+='<line x1="'+L+'" y1="'+yy+'" x2="'+(W-R)+'" y2="'+yy+'" stroke="#dfe6ed"/><text x="'+(L-10)+'" y="'+(yy+4)+'" text-anchor="end" font-size="12" fill="#667085">'+fmtMoney.format(val/1000000)+' млн</text>';}
+      let ticks=''; for(let i=0;i<values.length;i+=6){ticks+='<text x="'+x(i)+'" y="'+(H-20)+'" text-anchor="middle" font-size="12" fill="#667085">М'+(i+1)+'</text>';}
+      let marker=''; if(result.metrics.payback){const i=result.metrics.payback-1;marker='<line x1="'+x(i)+'" y1="'+T+'" x2="'+x(i)+'" y2="'+(H-B)+'" stroke="#26734d" stroke-width="2" stroke-dasharray="6 5"/><text x="'+(x(i)+8)+'" y="'+(T+16)+'" font-size="12" font-weight="700" fill="#26734d">Окупаемость: М'+result.metrics.payback+'</text>';}
+      return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Накопленный денежный поток по месяцам">'+grid+'<line x1="'+L+'" y1="'+y(0)+'" x2="'+(W-R)+'" y2="'+y(0)+'" stroke="#8fa3b5" stroke-width="1.5"/>'+ticks+'<path d="'+path+'" fill="none" stroke="#2f75b5" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>'+marker+'</svg>';
+    }
+
+    function barChart(){
+      const rows=result.annual;const W=680,H=330,L=65,R=18,T=20,B=55;const all=rows.flatMap(r=>[r.netRevenue,r.netProfit]);const min=Math.min(0,...all),max=Math.max(0,...all);const span=max-min||1;const y=v=>T+(max-v)*(H-T-B)/span;const group=(W-L-R)/rows.length;let bars='';rows.forEach((row,i)=>{const gx=L+i*group+group*.2;const bw=group*.25;for(const [j,value,color] of [[0,row.netRevenue,'#2f75b5'],[1,row.netProfit,'#68a88a']]){const yy=y(Math.max(0,value)),y0=y(0),height=Math.abs(y(value)-y0);bars+='<rect x="'+(gx+j*(bw+8))+'" y="'+Math.min(y(value),y0)+'" width="'+bw+'" height="'+Math.max(1,height)+'" rx="4" fill="'+color+'"><title>'+row.year+': '+fmtMoney.format(value)+' ₽</title></rect>';}bars+='<text x="'+(gx+bw)+'" y="'+(H-22)+'" text-anchor="middle" font-size="13" fill="#667085">'+row.year+'</text>';});let grid='';for(let i=0;i<=4;i++){const val=min+span*i/4;const yy=y(val);grid+='<line x1="'+L+'" y1="'+yy+'" x2="'+(W-R)+'" y2="'+yy+'" stroke="#dfe6ed"/><text x="'+(L-9)+'" y="'+(yy+4)+'" text-anchor="end" font-size="11" fill="#667085">'+fmtMoney.format(val/1000000)+' млн</text>';}
+      return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Выручка и чистая прибыль по годам">'+grid+'<line x1="'+L+'" y1="'+y(0)+'" x2="'+(W-R)+'" y2="'+y(0)+'" stroke="#8fa3b5"/>'+bars+'</svg>';
+    }
+
+    let presentationIndex=0;
+    let notesVisible=false;
+
+    function presentationCashChart(){
+      const values=result.months.map(m=>m.projectCum);const W=920,H=300,L=30,R=30,T=25,B=42;const min=Math.min(0,...values),max=Math.max(0,...values),span=max-min||1;
+      const x=i=>L+i*(W-L-R)/(values.length-1);const y=v=>T+(max-v)*(H-T-B)/span;
+      const path=values.map((v,i)=>(i?'L':'M')+x(i).toFixed(1)+','+y(v).toFixed(1)).join(' ');
+      let marker='';if(result.metrics.payback){const i=result.metrics.payback-1;marker='<line x1="'+x(i)+'" y1="'+T+'" x2="'+x(i)+'" y2="'+(H-B)+'" stroke="#26734d" stroke-width="3" stroke-dasharray="7 6"/><text x="'+x(i)+'" y="18" text-anchor="middle" font-size="17" font-weight="700" fill="#26734d">М'+result.metrics.payback+'</text>';}
+      return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Накопленный денежный поток"><line x1="'+L+'" y1="'+y(0)+'" x2="'+(W-R)+'" y2="'+y(0)+'" stroke="#9aabba" stroke-width="2"/><path d="'+path+'" fill="none" stroke="#2f75b5" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>'+marker+'<text x="'+L+'" y="'+(H-12)+'" font-size="16" fill="#667085">М1</text><text x="'+(W-R)+'" y="'+(H-12)+'" text-anchor="end" font-size="16" fill="#667085">М'+BASE_PARAMS.horizon+'</text></svg>';
+    }
+
+    function presentationSlides(){
+      const m=result.metrics;const data=analysisData();const top=data.ranking.slice(0,3);const paybackBounds=data.boundaries;
+      const scenarioStats=data.comparisons.map(item=>'<div class="slide-stat"><span>'+item.name+'</span><strong>'+formatRub(item.result.metrics.secondYearProfit)+'</strong></div>').join('');
+      const rankStats=top.map((item,index)=>'<div><strong>'+(index+1)+'. '+item.label+'</strong> — разница '+formatRub(item.impact)+' при изменении на ±10%</div>').join('');
+      const sourceStats=data.sources.slice(0,3).map(item=>'<div><strong>'+item.parameter+': '+item.value+'</strong><br>'+item.source+'</div>').join('');
+      return [
+        {kicker:'1 · Задача',title:'Проверить экономику одной пекарни',body:'<p class="slide-lead">1 точка площадью 60 м² в Казани рассчитана на 36 месяцев.</p>',notes:'Модель собрана для пекарни полного цикла без посадочных мест. Расчёт нужен владельцам для оценки вложений, окупаемости и результата.'},
+        {kicker:'2 · Главные цифры',title:'Текущий результат модели',body:'<div class="slide-stats"><div class="slide-stat"><span>Инвестиции</span><strong>'+formatRub(m.investmentNeed)+'</strong></div><div class="slide-stat"><span>Окупаемость</span><strong>'+(m.payback?'Месяц '+m.payback:'Позже М'+BASE_PARAMS.horizon)+'</strong></div><div class="slide-stat"><span>Прибыль 2-го года</span><strong>'+formatRub(m.secondYearProfit)+'</strong></div></div>',notes:'На экране три итоговых показателя при текущем положении движков. Значения пересчитываются без перезагрузки страницы.'},
+        {kicker:'3 · Денежный поток',title:'Окупаемость по потоку проекта',body:'<div class="slide-chart">'+presentationCashChart()+'</div>',notes:'Линия показывает накопленный денежный поток до собственных средств и кредита. Точка пересечения нуля определяет месяц окупаемости.'},
+        {kicker:'4 · Финансирование',title:m.financingEnough?'Доступных денег хватает':'Есть разрыв финансирования',body:'<div class="slide-stats"><div class="slide-stat"><span>Потребность</span><strong>'+formatRub(m.investmentNeed)+'</strong></div><div class="slide-stat"><span>Доступно</span><strong>'+formatRub(m.availableFinancing)+'</strong></div><div class="slide-stat"><span>Нехватка</span><strong>'+formatRub(m.financingGap)+'</strong></div></div>',notes:'Доступная сумма складывается из собственных средств и кредита. Разрыв считается по максимальной потребности в деньгах за весь горизонт.'},
+        {kicker:'5 · Сценарии',title:'Прибыль второго года в 3 сценариях',body:'<div class="slide-stats">'+scenarioStats+'</div>',notes:'Сценарии различаются чеками в день, средним чеком и долей сырья. Изменения остальных движков применяются ко всем трём сценариям одинаково.'},
+        {kicker:'6 · Чувствительность',title:'Три параметра с наибольшим влиянием',body:'<div class="slide-list">'+rankStats+'</div>',notes:'Рейтинг показывает разницу прибыли второго года между +10% и −10%. Сортировка выполняется заново после каждого изменения параметров.'},
+        {kicker:'7 · Условия входа',title:'Граница окупаемости за 36 месяцев',body:'<div class="slide-stats"><div class="slide-stat"><span>Чеки в день</span><strong>'+(paybackBounds[0].payback===null?'Не найдена':fmtOne.format(paybackBounds[0].payback))+'</strong></div><div class="slide-stat"><span>Средний чек</span><strong>'+(paybackBounds[1].payback===null?'Не найдена':formatRub(paybackBounds[1].payback))+'</strong></div></div>',notes:'Это расчётные значения, при которых накопленный поток к концу горизонта равен нулю. Ниже границы окупаемость в пределах модели не наступает при неизменных остальных параметрах.'},
+        {kicker:'8 · Источники',title:'Три ключевые цифры расчёта',body:'<div class="slide-list">'+sourceStats+'</div>',notes:'В таблице параметров разделены ответы клиента, рыночные данные и оценки. Оценки отмечены как ожидающие уточнения.'},
+        {kicker:'9 · Контроль',title:'Что проверить и отслеживать',body:'<div class="slide-list"><div>5 дней — замерить поток до старта</div><div>8–10 позиций — заменить типовые техкарты</div><div>'+formatRub(BASE_PARAMS.minCash)+' — сохранять минимальный остаток</div></div>',notes:'До открытия проверяются трафик, техкарты и смета. После открытия еженедельно контролируются чеки, а ежемесячно — средний чек, сырьё и деньги.'},
+      ];
+    }
+
+    function renderPresentation(){
+      const slides=presentationSlides();presentationIndex=clamp(presentationIndex,0,slides.length-1);const slide=slides[presentationIndex];
+      document.getElementById('presentationSlide').innerHTML='<div class="slide-kicker">'+slide.kicker+'</div><h2>'+slide.title+'</h2>'+slide.body+'<div class="speaker-notes" '+(notesVisible?'':'hidden')+'>'+slide.notes+'</div>';
+      document.getElementById('slideCounter').textContent=(presentationIndex+1)+' / '+slides.length;
+      document.getElementById('prevSlide').disabled=presentationIndex===0;document.getElementById('nextSlide').disabled=presentationIndex===slides.length-1;
+      document.getElementById('notesButton').textContent=notesVisible?'Скрыть заметки':'Заметки докладчика';
+    }
+
+    function openPresentation(){document.getElementById('presentationOverlay').hidden=false;document.body.classList.add('body-presentation');renderPresentation();}
+    function closePresentation(){document.getElementById('presentationOverlay').hidden=true;document.body.classList.remove('body-presentation');document.getElementById('controls').scrollIntoView({behavior:'smooth',block:'start'});}
+
+    function xmlEscape(value){return String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&apos;');}
+    function docParagraph(text,style){return '<w:p>'+(style?'<w:pPr><w:pStyle w:val="'+style+'"/></w:pPr>':'')+'<w:r><w:t xml:space="preserve">'+xmlEscape(text)+'</w:t></w:r></w:p>';}
+    function noteParagraphs(){
+      const m=result.metrics;const data=analysisData();const paragraphs=[];
+      const heading=text=>paragraphs.push(docParagraph(text,'Heading1'));const line=text=>paragraphs.push(docParagraph(text));
+      paragraphs.push(docParagraph('Пояснительная записка','Title'));line('Дата модели: 09.10.2026.');
+      heading('1. Проект и задача');line('Модель оценивает 1 пекарню полного цикла площадью 60 м² в Казани на горизонте 36 месяцев; открытие предусмотрено в месяце 3.');line('Цель расчёта — определить для 3 сценариев потребность в деньгах, месяц окупаемости и финансовый результат владельца.');
+      heading('2. Текущий расчёт');line('Потребность в инвестициях: '+formatRub(m.investmentNeed)+'.');line('Окупаемость: '+(m.payback?'месяц '+m.payback:'позже месяца '+BASE_PARAMS.horizon)+'.');line('Чистая прибыль второго полного года: '+formatRub(m.secondYearProfit)+'.');line('Остаток денег в конце месяца '+BASE_PARAMS.horizon+': '+formatRub(m.endingCash)+'.');
+      heading('3. Финансирование');line('Доступно '+formatRub(m.availableFinancing)+': '+formatRub(BASE_PARAMS.ownFunds)+' собственных средств и '+formatRub(BASE_PARAMS.loanAmount)+' кредита.');line(m.financingEnough?'Потребность '+formatRub(m.investmentNeed)+' укладывается в доступное финансирование.':'Нехватка финансирования: '+formatRub(m.financingGap)+'.');
+      heading('4. Три сценария');data.comparisons.forEach(item=>line(item.name+': '+fmtMoney.format(item.inputs.planChecks)+' чеков в день, средний чек '+formatRub(item.inputs.avgTicket)+', сырьё '+fmtOne.format(item.inputs.rawShare*100)+'%, прибыль второго года '+formatRub(item.result.metrics.secondYearProfit)+'.'));
+      heading('5. Чувствительность результата');data.ranking.forEach((item,index)=>line((index+1)+'. '+item.label+': изменение на ±10% даёт разницу чистой прибыли '+formatRub(item.impact)+'.'));
+      heading('6. Расчётные границы');data.boundaries.forEach(item=>line(item.label+': прибыль второго года равна 0 при '+(item.profit===null?'не найденной границе':(item.key==='planChecks'?fmtOne.format(item.profit)+' чеков в день':formatRub(item.profit)))+'; окупаемость на границе 36 месяцев при '+(item.payback===null?'не найденной границе':(item.key==='planChecks'?fmtOne.format(item.payback)+' чеков в день':formatRub(item.payback)))+'.'));
+      heading('7. Откуда взяты цифры');data.sources.forEach(item=>line(item.parameter+': '+item.value+'. Источник: '+item.source+'. Статус: '+item.status+'.'));
+      heading('8. Что проверить до старта');line('1. Проверить поток у помещения не менее 5 дней и сопоставить его с '+fmtMoney.format(state.planChecks)+' чеками в день.');line('2. Получить техкарты для 8–10 позиций и проверить долю сырья '+fmtOne.format(state.rawShare*100)+'%.');line('3. Подтвердить смету вложений '+formatRub(state.investments)+' коммерческими предложениями.');line('4. Подтвердить кредит '+formatRub(BASE_PARAMS.loanAmount)+' и ставку '+fmtOne.format(BASE_PARAMS.loanRate*100)+'% предложением банка.');
+      heading('9. Что контролировать после открытия');line('1. Еженедельно сравнивать фактические чеки с планом '+fmtMoney.format(state.planChecks)+' в день.');line('2. Ежемесячно сверять средний чек '+formatRub(state.avgTicket)+' и долю сырья '+fmtOne.format(state.rawShare*100)+'%.');line('3. Поддерживать минимальный остаток денег '+formatRub(BASE_PARAMS.minCash)+'.');line('4. Через 12 месяцев заменить 12 сезонных коэффициентов фактическими данными.');
+      line('Расчёт на основе финансовой модели в Excel, параметры согласованы с заказчиком.');return paragraphs.join('');
+    }
+
+    function crc32(bytes){let crc=-1;for(const byte of bytes){crc^=byte;for(let i=0;i<8;i++)crc=(crc>>>1)^((crc&1)?0xedb88320:0);}return (crc^-1)>>>0;}
+    function u16(value){const b=new Uint8Array(2);new DataView(b.buffer).setUint16(0,value,true);return b;}
+    function u32(value){const b=new Uint8Array(4);new DataView(b.buffer).setUint32(0,value>>>0,true);return b;}
+    function joinBytes(parts){const size=parts.reduce((sum,p)=>sum+p.length,0);const out=new Uint8Array(size);let offset=0;parts.forEach(p=>{out.set(p,offset);offset+=p.length;});return out;}
+    function zipStored(files){
+      const encoder=new TextEncoder();const local=[];const central=[];let offset=0;
+      Object.entries(files).forEach(([name,content])=>{const n=encoder.encode(name);const d=encoder.encode(content);const crc=crc32(d);const header=joinBytes([u32(0x04034b50),u16(20),u16(0),u16(0),u16(0),u16(0),u32(crc),u32(d.length),u32(d.length),u16(n.length),u16(0),n]);local.push(header,d);const ch=joinBytes([u32(0x02014b50),u16(20),u16(20),u16(0),u16(0),u16(0),u16(0),u32(crc),u32(d.length),u32(d.length),u16(n.length),u16(0),u16(0),u16(0),u16(0),u32(0),u32(offset),n]);central.push(ch);offset+=header.length+d.length;});
+      const centralBytes=joinBytes(central);const end=joinBytes([u32(0x06054b50),u16(0),u16(0),u16(Object.keys(files).length),u16(Object.keys(files).length),u32(centralBytes.length),u32(offset),u16(0)]);return joinBytes([...local,centralBytes,end]);
+    }
+    function buildDocxBytes(){
+      const documentXml='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>'+noteParagraphs()+'<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134"/></w:sectPr></w:body></w:document>';
+      const styles='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/><w:sz w:val="22"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Title"><w:name w:val="Title"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:after="240"/></w:pPr><w:rPr><w:b/><w:color w:val="17365D"/><w:sz w:val="36"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:before="240" w:after="100"/></w:pPr><w:rPr><w:b/><w:color w:val="17365D"/><w:sz w:val="28"/></w:rPr></w:style></w:styles>';
+      return zipStored({'[Content_Types].xml':'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/></Types>','_rels/.rels':'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties" Target="docProps/app.xml"/></Relationships>','word/document.xml':documentXml,'word/styles.xml':styles,'word/_rels/document.xml.rels':'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>','docProps/core.xml':'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/"><dc:title>Пояснительная записка</dc:title><dc:subject>Финансовая модель пекарни</dc:subject><dc:creator>Интерактивная финансовая модель</dc:creator><dcterms:created xsi:type="dcterms:W3CDTF" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">2026-10-09T00:00:00Z</dcterms:created></cp:coreProperties>','docProps/app.xml':'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties"><Application>Интерактивная финансовая модель</Application></Properties>'});
+    }
+    function downloadNote(){const bytes=buildDocxBytes();const blob=new Blob([bytes],{type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download='Пояснительная записка.docx';document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+
+    function update(){ result=calculateModel(state); renderKpis(); renderAnalyticalNote(); renderAnnualTable(); if(!document.getElementById('monthlyWrap').hidden)renderMonthlyTable(); document.getElementById('cashFlowChart').innerHTML=lineChart(); document.getElementById('annualChart').innerHTML=barChart(); if(!document.getElementById('presentationOverlay').hidden)renderPresentation(); }
+
+    document.querySelectorAll('.scenario-btn').forEach(button=>button.addEventListener('click',()=>setScenario(button.dataset.scenario)));
+    document.getElementById('resetButton').addEventListener('click',()=>setScenario('Базовый'));
+    document.getElementById('presentationButton').addEventListener('click',openPresentation);
+    document.getElementById('closePresentation').addEventListener('click',closePresentation);
+    document.getElementById('prevSlide').addEventListener('click',()=>{presentationIndex=Math.max(0,presentationIndex-1);renderPresentation();});
+    document.getElementById('nextSlide').addEventListener('click',()=>{presentationIndex=Math.min(presentationSlides().length-1,presentationIndex+1);renderPresentation();});
+    document.getElementById('notesButton').addEventListener('click',()=>{notesVisible=!notesVisible;renderPresentation();});
+    document.getElementById('downloadNote').addEventListener('click',downloadNote);
+    document.addEventListener('keydown',event=>{if(document.getElementById('presentationOverlay').hidden)return;if(event.key==='ArrowRight'){presentationIndex=Math.min(presentationSlides().length-1,presentationIndex+1);renderPresentation();}else if(event.key==='ArrowLeft'){presentationIndex=Math.max(0,presentationIndex-1);renderPresentation();}else if(event.key==='Escape')closePresentation();});
+    document.getElementById('toggleMonthly').addEventListener('click',()=>{const wrap=document.getElementById('monthlyWrap');const show=wrap.hidden;if(show)renderMonthlyTable();wrap.hidden=!show;document.getElementById('toggleMonthly').textContent=wrap.hidden?'Показать помесячный расчёт':'Скрыть помесячный расчёт';});
+    window.__interactiveModelTest={snapshot:()=>({scenario:selectedScenario,state:{...state},metrics:{...result.metrics},note:document.getElementById('noteContent').innerText,slide:presentationIndex+1}),setValue:(key,value)=>{state[key]=value;renderControls();update();},docxBase64:()=>{const bytes=buildDocxBytes();let binary='';for(let i=0;i<bytes.length;i+=0x8000)binary+=String.fromCharCode(...bytes.subarray(i,i+0x8000));return btoa(binary);}};
+    renderControls(); update();
+  </script>
+</body>
+</html>

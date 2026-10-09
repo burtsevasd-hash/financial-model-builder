@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Коммерческое предложение — финансовая модель пекарни</title>
+  <style>
+    :root {
+      --navy: #123e68;
+      --blue: #1f67a5;
+      --sky: #dcedfb;
+      --ice: #f3f8fc;
+      --line: #c9ddeb;
+      --ink: #182b3d;
+      --muted: #60778a;
+      --white: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body { margin: 0; padding: 0; }
+
+    body {
+      background: #eaf1f6;
+      color: var(--ink);
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 9.35pt;
+      line-height: 1.28;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 12mm auto;
+      padding: 12mm 14mm 9mm;
+      background: var(--white);
+      box-shadow: 0 14px 42px rgba(31, 74, 107, 0.18);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 7mm;
+      background: linear-gradient(90deg, var(--navy), var(--blue) 64%, #75bce8);
+    }
+
+    .eyebrow {
+      margin: 2mm 0 1.5mm;
+      color: var(--blue);
+      font-size: 8.5pt;
+      font-weight: 700;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--navy);
+      font-size: 23pt;
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+    }
+
+    .subtitle {
+      margin: 1.5mm 0 3.5mm;
+      color: var(--muted);
+      font-size: 12.5pt;
+    }
+
+    .greeting {
+      margin: 0 0 1.5mm;
+      color: var(--navy);
+      font-size: 11.5pt;
+      font-weight: 700;
+    }
+
+    .task {
+      margin: 0 0 3.5mm;
+      padding: 2.5mm 3.5mm;
+      border-left: 3px solid var(--blue);
+      background: var(--ice);
+    }
+
+    .task p { margin: 0; }
+    .task p + p { margin-top: 1.5mm; }
+
+    .section-title {
+      margin: 3.2mm 0 1.8mm;
+      color: var(--navy);
+      font-size: 13pt;
+      line-height: 1.15;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      table-layout: fixed;
+      border: 1px solid var(--line);
+      border-radius: 3mm;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 2.1mm 2.7mm;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+    th:last-child, td:last-child { border-right: 0; }
+
+    thead th {
+      color: var(--white);
+      background: var(--navy);
+      font-size: 9pt;
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    thead th:first-child { width: 22%; }
+    thead th:nth-child(2), thead th:nth-child(3) { width: 39%; }
+
+    thead th.recommended {
+      background: var(--blue);
+      position: relative;
+    }
+
+    .badge {
+      display: inline-block;
+      margin-left: 1.5mm;
+      padding: 0.6mm 1.5mm;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.2);
+      font-size: 7.2pt;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      vertical-align: 0.2mm;
+    }
+
+    tbody td:first-child {
+      color: var(--navy);
+      background: #f8fbfe;
+      font-weight: 700;
+    }
+
+    tbody td:nth-child(3) { background: #f2f8fd; }
+
+    .compact {
+      margin: 0;
+      padding-left: 4.5mm;
+    }
+
+    .compact li { margin: 0 0 0.7mm; }
+    .compact li:last-child { margin-bottom: 0; }
+
+    .term {
+      color: var(--navy);
+      font-size: 11.5pt;
+      font-weight: 800;
+    }
+
+    .price {
+      display: block;
+      margin-top: 0.5mm;
+      color: var(--blue);
+      font-size: 16pt;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .reasons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2.4mm;
+    }
+
+    .reason {
+      min-height: 19mm;
+      padding: 2.4mm;
+      border: 1px solid var(--line);
+      border-radius: 2.5mm;
+      background: linear-gradient(180deg, var(--white), var(--ice));
+    }
+
+    .reason-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 6mm;
+      height: 6mm;
+      margin-bottom: 1mm;
+      border-radius: 50%;
+      color: var(--white);
+      background: var(--blue);
+      font-size: 8pt;
+      font-weight: 800;
+    }
+
+    .reason p { margin: 0; font-size: 8.65pt; }
+
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 3mm;
+      margin-top: 3.2mm;
+    }
+
+    .panel {
+      padding: 2.7mm 3.2mm;
+      border-radius: 3mm;
+      background: var(--ice);
+      border: 1px solid var(--line);
+    }
+
+    .panel h2 {
+      margin: 0 0 1.4mm;
+      color: var(--navy);
+      font-size: 12pt;
+    }
+
+    .panel p { margin: 0; }
+    .panel p + p { margin-top: 1.6mm; }
+
+    .steps {
+      margin: 0;
+      padding-left: 4.5mm;
+    }
+
+    .steps li { margin-bottom: 0.8mm; }
+    .steps li:last-child { margin-bottom: 0; }
+
+    .footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 3mm;
+      padding-top: 2mm;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 8.5pt;
+    }
+
+    .footer strong { color: var(--navy); }
+
+    @page { size: A4 portrait; margin: 0; }
+
+    @media print {
+      body { background: var(--white); }
+      .page {
+        width: 210mm;
+        height: 297mm;
+        min-height: 297mm;
+        margin: 0;
+        padding-top: 10mm;
+        padding-bottom: 7mm;
+        box-shadow: none;
+      }
+      .footer { margin-top: 2mm; padding-top: 1.2mm; transform: translateY(-3mm); }
+      table, .reason, .panel { break-inside: avoid; }
+    }
+
+    @media (max-width: 760px) {
+      body { background: var(--white); }
+      .page { width: 100%; min-height: 100vh; margin: 0; padding: 13mm 5mm 10mm; box-shadow: none; }
+      h1 { font-size: 22pt; }
+      table { font-size: 8.5pt; }
+      th, td { padding: 2.5mm 2mm; }
+      .reasons { grid-template-columns: 1fr; }
+      .bottom-grid { grid-template-columns: 1fr; }
+      .reason { min-height: auto; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="eyebrow">Предложение по проекту</div>
+    <h1>Коммерческое предложение</h1>
+    <div class="subtitle">Разработка финансовой модели пекарни</div>
+
+    <div class="greeting">Уважаемый клиент,</div>
+    <section class="task" aria-label="Задача проекта">
+      <p>Планируется открытие одной пекарни в Казани, и до начала вложений необходимо оценить прибыль, движение денег, необходимую сумму финансирования и срок окупаемости на горизонте 36 месяцев.</p>
+      <p>Финансовая модель поможет сравнить варианты развития и понять, при каких условиях проект можно запускать.</p>
+    </section>
+
+    <h2 class="section-title">Варианты работы</h2>
+    <table aria-label="Сравнение пакетов">
+      <thead>
+        <tr>
+          <th>Что входит</th>
+          <th>Базовый пакет</th>
+          <th class="recommended">Расширенный пакет <span class="badge">рекомендуем</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Состав работ</td>
+          <td>
+            <ul class="compact">
+              <li>сбор 6 рыночных показателей;</li>
+              <li>модель на 36 месяцев;</li>
+              <li>прибыль, движение денег, вложения и окупаемость;</li>
+              <li>три сценария и переключатель;</li>
+              <li>проверка расчётов и встреча на 1 час.</li>
+            </ul>
+          </td>
+          <td>
+            <ul class="compact">
+              <li>всё из базового пакета;</li>
+              <li>анализ влияния ключевых показателей;</li>
+              <li>пояснительная записка;</li>
+              <li>презентация на 8–12 слайдов;</li>
+              <li>интерактивная версия и встреча на 2 часа.</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>Что получит клиент</td>
+          <td>Рабочий Excel-файл с исходными данными, тремя сценариями, итоговыми показателями и краткой инструкцией.</td>
+          <td>Excel-модель, интерактивная версия, таблицы риска, записка с выводами и презентация для обсуждения решения.</td>
+        </tr>
+        <tr>
+          <td>Срок выполнения</td>
+          <td><span class="term">10–12 рабочих дней</span></td>
+          <td><span class="term">18–22 рабочих дня</span></td>
+        </tr>
+        <tr>
+          <td>Стоимость</td>
+          <td><span class="price">80 000 ₽</span></td>
+          <td><span class="price">140 000 ₽</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 class="section-title">Почему для этой задачи подходит расширенный пакет</h2>
+    <section class="reasons" aria-label="Преимущества расширенного пакета">
+      <article class="reason">
+        <div class="reason-number">1</div>
+        <p>Он покажет не только ожидаемый результат, но и при каких значениях числа покупок, среднего чека и себестоимости проект перестаёт быть выгодным.</p>
+      </article>
+      <article class="reason">
+        <div class="reason-number">2</div>
+        <p>Записка и презентация позволят обсудить решение с близкими и партнёром без необходимости разбираться в формулах.</p>
+      </article>
+      <article class="reason">
+        <div class="reason-number">3</div>
+        <p>В интерактивной версии можно менять ключевые условия и сразу видеть, как они влияют на прибыль, деньги и окупаемость.</p>
+      </article>
+    </section>
+
+    <section class="bottom-grid">
+      <div class="panel">
+        <h2>Что нужно для старта</h2>
+        <ol class="steps">
+          <li>Подтвердить выбранный пакет и желаемую дату начала работы.</li>
+          <li>В течение 2 рабочих дней передать список оборудования и имеющиеся предложения поставщиков, условия аренды и ремонта, а также предложения банков, если они уже получены.</li>
+          <li>Согласовать оставшиеся допущения по числу покупок, стартовой закупке и сроку получения кредита.</li>
+        </ol>
+      </div>
+      <div class="panel">
+        <h2>Условия</h2>
+        <p><strong>Оплата:</strong> 50% перед началом работы, 50% после демонстрации результата и до передачи финальных файлов.</p>
+        <p>В стоимость входит один общий раунд согласованных правок.</p>
+        <p><strong>Предложение действительно 10 календарных дней.</strong></p>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>Срок начинается после предоплаты и получения исходных данных.</span>
+      <strong>Финансовая модель для принятия решения</strong>
+    </footer>
+  </main>
+</body>
+</html>

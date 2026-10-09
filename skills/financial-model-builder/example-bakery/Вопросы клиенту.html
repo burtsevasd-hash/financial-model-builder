@@ -1,0 +1,627 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Вопросы к первой встрече</title>
+  <style>
+    :root {
+      --bg: #f4f3ef;
+      --surface: #ffffff;
+      --surface-soft: #f8f8f5;
+      --text: #202522;
+      --muted: #65706a;
+      --line: #dcded8;
+      --accent: #285e4b;
+      --accent-hover: #1f4e3e;
+      --accent-soft: #e8f0ec;
+      --focus: #8bb6a4;
+      --radius: 18px;
+      --shadow: 0 10px 30px rgba(35, 50, 43, 0.06);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      font-size: 18px;
+      line-height: 1.55;
+    }
+
+    button, input, textarea, select { font: inherit; }
+
+    .page {
+      width: min(920px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 48px 0 132px;
+    }
+
+    .hero {
+      padding: 6px 2px 28px;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 750;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0 0 18px;
+      max-width: 760px;
+      font-size: clamp(34px, 6vw, 56px);
+      line-height: 1.04;
+      letter-spacing: -0.035em;
+    }
+
+    .intro {
+      max-width: 780px;
+      margin: 0;
+      color: #4f5954;
+      font-size: clamp(18px, 2.5vw, 21px);
+    }
+
+    .progress-wrap {
+      margin-top: 26px;
+      padding: 18px 20px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .progress-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .progress-track {
+      height: 8px;
+      overflow: hidden;
+      background: #e7e9e4;
+      border-radius: 99px;
+    }
+
+    .progress-bar {
+      width: 0;
+      height: 100%;
+      background: var(--accent);
+      border-radius: inherit;
+      transition: width 180ms ease;
+    }
+
+    .section {
+      margin-top: 34px;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin: 0 2px 16px;
+    }
+
+    .section-number {
+      flex: 0 0 auto;
+      color: var(--accent);
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(26px, 4vw, 34px);
+      line-height: 1.18;
+      letter-spacing: -0.025em;
+    }
+
+    .question {
+      margin-bottom: 16px;
+      padding: 24px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .question h3 {
+      margin: 0 0 18px;
+      font-size: clamp(20px, 3vw, 24px);
+      line-height: 1.35;
+      letter-spacing: -0.012em;
+    }
+
+    .fields {
+      display: grid;
+      gap: 15px;
+    }
+
+    .field {
+      padding: 15px;
+      background: var(--surface-soft);
+      border: 1px solid #e3e5df;
+      border-radius: 13px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 16px;
+      font-weight: 720;
+      line-height: 1.35;
+    }
+
+    .unit {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 520;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      color: var(--text);
+      background: #fff;
+      border: 1.5px solid #c7ccc5;
+      border-radius: 10px;
+      outline: none;
+      transition: border-color 130ms ease, box-shadow 130ms ease;
+    }
+
+    input, select { min-height: 50px; padding: 10px 13px; }
+    textarea { min-height: 104px; padding: 12px 13px; resize: vertical; }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(139, 182, 164, 0.28);
+    }
+
+    ::placeholder { color: #929a95; opacity: 1; }
+
+    .hint {
+      margin: 14px 0 0;
+      padding-top: 12px;
+      border-top: 1px solid #e7e9e4;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .hint strong { color: #4b5550; }
+
+    .actions {
+      position: fixed;
+      z-index: 10;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 14px 16px calc(14px + env(safe-area-inset-bottom));
+      background: rgba(244, 243, 239, 0.94);
+      border-top: 1px solid rgba(202, 206, 199, 0.9);
+      backdrop-filter: blur(14px);
+    }
+
+    .actions-inner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: min(920px, 100%);
+      margin: 0 auto;
+    }
+
+    .button {
+      min-height: 50px;
+      padding: 11px 20px;
+      border: 1px solid transparent;
+      border-radius: 11px;
+      cursor: pointer;
+      font-weight: 750;
+      transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+    }
+
+    .button:active { transform: translateY(1px); }
+
+    .button-primary {
+      color: #fff;
+      background: var(--accent);
+    }
+
+    .button-primary:hover { background: var(--accent-hover); }
+
+    .button-secondary {
+      color: var(--accent);
+      background: #fff;
+      border-color: #bfc9c3;
+    }
+
+    .button-secondary:hover { background: var(--accent-soft); }
+
+    .save-status {
+      margin-left: auto;
+      color: var(--muted);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .toast {
+      position: fixed;
+      z-index: 20;
+      left: 50%;
+      bottom: 92px;
+      max-width: calc(100% - 32px);
+      padding: 12px 16px;
+      color: #fff;
+      background: #28322d;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, 10px);
+      transition: opacity 180ms ease, transform 180ms ease;
+      font-size: 14px;
+    }
+
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    @media (max-width: 680px) {
+      body { font-size: 17px; }
+      .page { width: min(100% - 20px, 920px); padding-top: 30px; }
+      .hero { padding-inline: 4px; }
+      .question { padding: 18px; border-radius: 15px; }
+      .field { padding: 13px; }
+      .actions-inner { display: grid; grid-template-columns: 1fr 1fr; }
+      .button { padding-inline: 10px; }
+      .save-status { grid-column: 1 / -1; margin: -2px 0 0; text-align: center; }
+    }
+
+    @media (max-width: 420px) {
+      .actions-inner { grid-template-columns: 1fr; }
+      .save-status { display: none; }
+      .toast { bottom: 142px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <p class="eyebrow">Подготовка к первой встрече</p>
+      <h1>Вопросы о будущей пекарне</h1>
+      <p class="intro">Ответы помогут собрать финансовую модель именно под вашу точку и не тратить встречу на поиск цифр. На анкету потребуется примерно 20–30 минут. Можно отвечать приблизительно: точность мы уточним вместе. Если чего-то пока не знаете, так и напишите — недостающие ориентиры возьмём с рынка.</p>
+      <div class="progress-wrap" aria-live="polite">
+        <div class="progress-line"><span>Заполнено полей</span><strong id="progressText">0 из 32</strong></div>
+        <div class="progress-track" aria-hidden="true"><div class="progress-bar" id="progressBar"></div></div>
+      </div>
+    </header>
+
+    <form id="questionnaire" novalidate>
+      <section class="section" data-section="Формат работы и продукт">
+        <div class="section-heading"><span class="section-number">01</span><h2>Формат работы и продукт</h2></div>
+
+        <article class="question">
+          <h3>Представьте путь от подписания договора до первого покупателя. В какие месяцы начнутся аренда и продажи, и удалось ли договориться о каникулах?</h3>
+          <div class="fields">
+            <div class="field"><label for="opening-month">Месяц открытия точки<span class="unit">Единица ответа: номер месяца от начала модели, от 1 до 36</span></label><input id="opening-month" data-param="Месяц открытия точки" inputmode="numeric" placeholder="Например: 4"></div>
+            <div class="field"><label for="rent-start">Месяц начала аренды<span class="unit">Единица ответа: номер месяца от начала модели, от 1 до 36</span></label><input id="rent-start" data-param="Месяц начала аренды" inputmode="numeric" placeholder="Например: 1"></div>
+            <div class="field"><label for="rent-holiday">Арендные каникулы<span class="unit">Единица ответа: месяцев</span></label><input id="rent-holiday" data-param="Арендные каникулы" inputmode="numeric" placeholder="Например: 2; если нет — 0"></div>
+          </div>
+          <p class="hint"><strong>Если не знаете:</strong> отсчитайте месяц подписания аренды как первый, а открытие поставьте на месяц, когда ремонт, оборудование и команда уже готовы. По каникулам можно написать «не знаю» — проверим договор.</p>
+        </article>
+
+        <article class="question">
+          <h3>Как будет выглядеть обычный месяц работы: сколько дней точка открыта для покупателей?</h3>
+          <div class="fields"><div class="field"><label for="work-days">Рабочих дней в месяц<span class="unit">Единица ответа: дней в месяц, от 20 до 31</span></label><input id="work-days" data-param="Рабочих дней в месяц" inputmode="numeric" placeholder="Например: 30"></div></div>
+          <p class="hint"><strong>Если не знаете:</strong> при ежедневной работе укажите 30, при одном выходном в неделю — около 26. Можно написать «не знаю».</p>
+        </article>
+
+        <article class="question">
+          <h3>В первые месяцы часть хлеба и выпечки может не продаться. Какая доля продаж, по вашему ощущению, будет уходить в списания, потери и возвраты?</h3>
+          <div class="fields"><div class="field"><label for="losses">Списания и потери<span class="unit">Единица ответа: % выручки</span></label><input id="losses" data-param="Списания и потери" inputmode="decimal" placeholder="Например: 5%"></div></div>
+          <p class="hint"><strong>Если не знаете:</strong> спросите партнёра-пекаря о списаниях в сетевой пекарне или напишите «не знаю» — возьмём рыночный ориентир.</p>
+        </article>
+      </section>
+
+      <section class="section" data-section="Клиенты и продажи">
+        <div class="section-heading"><span class="section-number">02</span><h2>Клиенты и продажи</h2></div>
+
+        <article class="question">
+          <h3>Представьте точку уже после раскрутки. Сколько покупок за обычный день вы считаете реалистичным результатом?</h3>
+          <div class="fields"><div class="field"><label for="checks">Плановое количество чеков в день<span class="unit">Единица ответа: чеков в день</span></label><input id="checks" data-param="Плановое количество чеков в день" inputmode="numeric" placeholder="Например: 140"></div></div>
+          <p class="hint"><strong>Если не знаете:</strong> прикиньте поток людей мимо помещения, сколько из них зайдут и купят. Можно написать «не знаю» — оценим по локации и аналогам.</p>
+        </article>
+
+        <article class="question">
+          <h3>Как быстро пекарня сможет набрать этот поток после открытия?</h3>
+          <div class="fields"><div class="field"><label for="ramp">Кривая выхода на план по месяцам<span class="unit">Единица ответа: % планового уровня по месяцам 1–6 после открытия</span></label><textarea id="ramp" data-param="Кривая выхода на план по месяцам" placeholder="Например: месяц 1 — 40%, месяц 2 — 55%, месяц 3 — 70%, месяц 4 — 85%, месяц 5 — 95%, месяц 6 — 100%"></textarea></div></div>
+          <p class="hint"><strong>Если не знаете:</strong> напишите, за сколько месяцев хотите выйти на устойчивый поток. Промежуточную кривую мы построим сами.</p>
+        </article>
+
+        <article class="question">
+          <h3>Что обычно окажется в одном заказе и примерно сколько покупатель заплатит за него?</h3>
+          <div class="fields"><div class="field"><label for="avg-check">Средний чек<span class="unit">Единица ответа: руб. за чек</span></label><input id="avg-check" data-param="Средний чек" inputmode="numeric" placeholder="Например: 420"></div></div>
+          <p class="hint"><strong>Если не знаете:</strong> сложите типичный набор, например хлеб, две выпечки и кофе. Можно написать «не знаю» — соберём ориентир по меню и ценам конкурентов.</p>
+        </article>
+
+        <article class="question">
+          <h3>Если взять всю месячную выручку за 100%, какая часть, по вашему ожиданию, придёт через агрегатор доставки?</h3>
+          <div class="fields"><div class="field"><label for="delivery-share">Доля доставки в выручке<span class="unit">Единица ответа: % выручки, от 0 до 100</span></label><input id="delivery-share" data-param="Доля доставки в выручке" inputmode="decimal" placeholder="Например: 15%"></div></div>
+          <p class="hint"><strong>Если не знаете:</strong> укажите желаемую долю или напишите «не знаю» — возьмём ориентир для пекарен «у дома».</p>
+        </article>
+
+        <article class="question">
+          <h3>Какой вариант прогноза сделать рабочим при обсуждении: осторожный, базовый или оптимистичный?</h3>
+          <div class="fields"><div class="field"><label for="scenario">Выбранный сценарий<span class="unit">Единица ответа: вариант сценария</span></label><select id="scenario" data-param="Выбранный сценарий"><option value="">Выберите вариант</option><option>Пессимистичный</option><option>Базовый</option><option>Оптимистичный</option></select></div></div>
+          <p class="hint"><strong>Если не знаете:</strong> выберите базовый — на встрече всё равно сравним все три варианта.</p>
+        </article>
+      </section>
+
+      <section class="section" data-section="Расходы">
+        <div class="section-heading"><span class="section-number">03</span><h2>Расходы</h2></div>
+
+        <article class="question">
+          <h3>Вы называли аренду около 100 000 рублей в месяц. Какая сумма стоит в предложении или договоре?</h3>
+          <div class="fields"><div class="field"><label for="rent">Арендная плата<span class="unit">Единица ответа: руб. в месяц</span></label><input id="rent" data-param="Арендная плата" inputmode="numeric" placeholder="Например: 100 000"></div></div>
+          <p class="hint"><strong>Если не знаете:</strong> укажите текущую цену из объявления или напишите «не знаю». Отдельно уточним, включены ли эксплуатационные платежи.</p>
+        </article>
+
+        <article class="question">
+          <h3>Какие регулярные расходы вы уже представляете помимо аренды?</h3>
+          <div class="fields">
+            <div class="field"><label for="utilities">Коммунальные услуги<span class="unit">Единица ответа: руб. в месяц; 0, если входят в аренду</span></label><input id="utilities" data-param="Коммунальные услуги" inputmode="numeric" placeholder="Например: 45 000"></div>
+            <div class="field"><label for="marketing">Маркетинг и продвижение<span class="unit">Единица ответа: руб. в месяц</span></label><input id="marketing" data-param="Маркетинг и продвижение" inputmode="numeric" placeholder="Например: 30 000"></div>
+            <div class="field"><label for="other-opex">Прочие регулярные расходы<span class="unit">Единица ответа: руб. в месяц одной суммой</span></label><textarea id="other-opex" data-param="Прочие регулярные расходы" placeholder="Связь, касса и ОФД, бухгалтерия, уборка, санитарное обслуживание, вывоз отходов, охрана, банк, страхование — можно одной суммой или списком"></textarea></div>
+          </div>
+          <p class="hint"><strong>Если не знаете:</strong> перечислите только известные платежи, а напротив остальных напишите «не знаю» — подберём рыночные значения отдельно.</p>
+        </article>
+
+        <article class="question">
+          <h3>Если покупатель платит картой или онлайн, какую эффективную комиссию банк удержит с выручки точки?</h3>
+          <div class="fields"><div class="field"><label for="acquiring">Комиссия эквайринга<span class="unit">Единица ответа: % выручки точки</span></label><input id="acquiring" data-param="Комиссия эквайринга" inputmode="decimal" placeholder="Например: 1,8%"></div></div>
+          <p class="hint"><strong>Если не знаете:</strong> пришлите название банка или тарифа либо напишите «не знаю» — проверим предложения банков.</p>
+        </article>
+      </section>
+
+      <section class="section" data-section="Персонал">
+        <div class="section-heading"><span class="section-number">04</span><h2>Персонал</h2></div>
+
+        <article class="question">
+          <h3>Представьте первую рабочую неделю. Кто должен быть в смене, сколько людей нужно и когда каждый выйдет на работу?</h3>
+          <div class="fields">
+            <div class="field"><label for="team">Должность и численность<span class="unit">Единица ответа: человек по каждой должности, включая пекаря-партнёра</span></label><textarea id="team" data-param="Должность и численность" placeholder="Например: пекарь — 1; помощник пекаря — 1; продавец-кассир — 2"></textarea></div>
+            <div class="field"><label for="salary">Оклад к начислению по должности<span class="unit">Единица ответа: руб. в месяц по каждой должности</span></label><textarea id="salary" data-param="Оклад к начислению по должности" placeholder="Например: пекарь — 90 000; продавец-кассир — 55 000"></textarea></div>
+            <div class="field"><label for="staff-start">Месяц выхода сотрудников<span class="unit">Единица ответа: номер месяца от начала модели по каждой должности</span></label><textarea id="staff-start" data-param="Месяц выхода сотрудников" placeholder="Например: пекарь — месяц 2; продавцы — месяц 3"></textarea></div>
+          </div>
+          <p class="hint"><strong>Если не знаете:</strong> опишите минимальную команду своими словами. По зарплатам и срокам можно написать «не знаю» — возьмём вилки по Казани и предложим график найма.</p>
+        </article>
+      </section>
+
+      <section class="section" data-section="Помещение, оборудование и запуск">
+        <div class="section-heading"><span class="section-number">05</span><h2>Помещение, оборудование и запуск</h2></div>
+
+        <article class="question">
+          <h3>Что придётся сделать с помещением до установки печей, холодильников, кофейного оборудования и мебели?</h3>
+          <div class="fields"><div class="field"><label for="renovation">Ремонт и инженерная подготовка<span class="unit">Единица ответа: руб. одной суммой по смете</span></label><textarea id="renovation" data-param="Ремонт и инженерная подготовка" placeholder="Например: ремонт — 700 000; вентиляция — 250 000; усиление электрики — 180 000. Если сметы нет, перечислите нужные работы."></textarea></div></div>
+          <p class="hint"><strong>Если не знаете:</strong> пришлите площадь, состояние помещения и требования по вентиляции и мощности либо напишите «не знаю» — запросим ориентиры у подрядчиков.</p>
+        </article>
+
+        <article class="question">
+          <h3>Какие ещё платежи понадобятся до первого дня работы?</h3>
+          <div class="fields">
+            <div class="field"><label for="startup-other">Прочие расходы на запуск<span class="unit">Единица ответа: руб. одной суммой</span></label><textarea id="startup-other" data-param="Прочие расходы на запуск" placeholder="Регистрация, разрешения, вывеска, реклама до открытия, найм и обучение"></textarea></div>
+            <div class="field"><label for="rent-deposit">Обеспечительный платёж по аренде<span class="unit">Единица ответа: руб.</span></label><input id="rent-deposit" data-param="Обеспечительный платёж по аренде" inputmode="numeric" placeholder="Например: 100 000"></div>
+            <div class="field"><label for="initial-stock">Стартовая закупка сырья и упаковки<span class="unit">Единица ответа: руб.</span></label><input id="initial-stock" data-param="Стартовая закупка сырья и упаковки" inputmode="numeric" placeholder="Например: 180 000"></div>
+          </div>
+          <p class="hint"><strong>Если не знаете:</strong> перечислите известные траты без сумм. Для неизвестных позиций напишите «не знаю» — оценим по рынку и техкартам.</p>
+        </article>
+
+        <article class="question">
+          <h3>Когда придётся платить по основным строкам сметы — ремонт, оборудование, мебель, вывеска и стартовый запас?</h3>
+          <div class="fields"><div class="field"><label for="capex-months">Месяц оплаты по строке сметы<span class="unit">Единица ответа: номер месяца от начала модели по каждой строке вложений</span></label><textarea id="capex-months" data-param="Месяц оплаты по строке сметы" placeholder="Например: ремонт — месяц 1; оборудование — месяц 2; мебель — месяц 3; стартовый запас — месяц 3"></textarea></div></div>
+          <p class="hint"><strong>Если не знаете:</strong> укажите хотя бы порядок: что платится при подписании, что во время ремонта и что перед открытием. Точные месяцы расставим вместе.</p>
+        </article>
+      </section>
+
+      <section class="section" data-section="Запасы и расчёты с поставщиками">
+        <div class="section-heading"><span class="section-number">06</span><h2>Запасы и расчёты с поставщиками</h2></div>
+
+        <article class="question">
+          <h3>На сколько дней работы хотите держать сырьё и упаковку, и когда поставщикам нужно платить?</h3>
+          <div class="fields">
+            <div class="field"><label for="stock-days">Запас сырья и упаковки<span class="unit">Единица ответа: дней потребления</span></label><input id="stock-days" data-param="Запас сырья и упаковки" inputmode="numeric" placeholder="Например: 7 дней"></div>
+            <div class="field"><label for="supplier-delay">Отсрочка оплаты поставщикам<span class="unit">Единица ответа: дней; 0 означает предоплату</span></label><input id="supplier-delay" data-param="Отсрочка оплаты поставщикам" inputmode="numeric" placeholder="Например: 7 дней; если предоплата — 0"></div>
+          </div>
+          <p class="hint"><strong>Если не знаете:</strong> спросите партнёра, как часто обычно заказывают муку, масло, молоко и упаковку. Условия оплаты можно оставить «не знаю» — уточним у поставщиков.</p>
+        </article>
+
+        <article class="question">
+          <h3>Какую сумму хотите всегда оставлять на счёте и в кассе, чтобы спокойно оплатить ближайшие закупки и обязательные платежи?</h3>
+          <div class="fields"><div class="field"><label for="min-cash">Минимальный остаток денежных средств<span class="unit">Единица ответа: руб.</span></label><input id="min-cash" data-param="Минимальный остаток денежных средств" inputmode="numeric" placeholder="Например: 300 000"></div></div>
+          <p class="hint"><strong>Если не знаете:</strong> ориентир — запас на несколько недель постоянных расходов. Можно написать «не знаю», и модель покажет необходимый резерв.</p>
+        </article>
+      </section>
+
+      <section class="section" data-section="Деньги на старт и налоги">
+        <div class="section-heading"><span class="section-number">07</span><h2>Деньги на старт и налоги</h2></div>
+
+        <article class="question">
+          <h3>Вы ориентируетесь на общий бюджет 2,5–3 млн рублей. Сколько готовы вложить сами, а сколько планируете привлечь в кредит и когда?</h3>
+          <div class="fields">
+            <div class="field"><label for="equity">Собственные средства на запуск<span class="unit">Единица ответа: руб.</span></label><input id="equity" data-param="Собственные средства на запуск" inputmode="numeric" placeholder="Например: 2 000 000"></div>
+            <div class="field"><label for="loan">Сумма кредита<span class="unit">Единица ответа: руб.; 0, если кредит не берётся</span></label><input id="loan" data-param="Сумма кредита" inputmode="numeric" placeholder="Например: 800 000"></div>
+            <div class="field"><label for="loan-term">Срок кредита<span class="unit">Единица ответа: месяцев</span></label><input id="loan-term" data-param="Срок кредита" inputmode="numeric" placeholder="Например: 36"></div>
+            <div class="field"><label for="loan-month">Месяц получения кредита<span class="unit">Единица ответа: номер месяца от начала модели, от 1 до 36</span></label><input id="loan-month" data-param="Месяц получения кредита" inputmode="numeric" placeholder="Например: 1"></div>
+          </div>
+          <p class="hint"><strong>Если не знаете:</strong> укажите максимальную сумму собственных денег и напишите «условия кредита не знаю» — подберём рыночный вариант для сравнения.</p>
+        </article>
+
+        <article class="question">
+          <h3>Как планируете оформить бизнес и платить налог: ИП или ООО, с налогом с доходов либо с разницы между доходами и расходами?</h3>
+          <div class="fields"><div class="field"><label for="tax">Налоговый режим<span class="unit">Единица ответа: один вариант</span></label><select id="tax" data-param="Налоговый режим"><option value="">Выберите вариант</option><option>ИП УСН «доходы»</option><option>ИП УСН «доходы минус расходы»</option><option>ООО УСН «доходы»</option><option>ООО УСН «доходы минус расходы»</option><option>Не знаю</option></select></div></div>
+          <p class="hint"><strong>Если не знаете:</strong> выберите «Не знаю». Мы сравним режимы с учётом аренды, закупок и фонда оплаты труда.</p>
+        </article>
+
+        <article class="question">
+          <h3>В первые три года хотите регулярно забирать деньги из бизнеса или оставлять прибыль на развитие и резерв?</h3>
+          <div class="fields"><div class="field"><label for="owner-pay">Выплаты собственнику<span class="unit">Единица ответа: руб. в месяц; 0, если прибыль остаётся в бизнесе</span></label><input id="owner-pay" data-param="Выплаты собственнику" inputmode="numeric" placeholder="Например: 0 или 100 000"></div></div>
+          <p class="hint"><strong>Если не знаете:</strong> поставьте 0 на период запуска — позже проверим, с какого месяца бизнес сможет выдерживать выплаты.</p>
+        </article>
+      </section>
+    </form>
+  </main>
+
+  <div class="actions" role="region" aria-label="Действия с ответами">
+    <div class="actions-inner">
+      <button class="button button-primary" type="button" id="copyButton">Скопировать ответы</button>
+      <button class="button button-secondary" type="button" id="downloadButton">Скачать ответы</button>
+      <span class="save-status" id="saveStatus">Ответы сохраняются автоматически</span>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      'use strict';
+
+      const STORAGE_KEY = 'bakery-questionnaire-v1';
+      const form = document.getElementById('questionnaire');
+      const controls = Array.from(form.querySelectorAll('[data-param]'));
+      const progressText = document.getElementById('progressText');
+      const progressBar = document.getElementById('progressBar');
+      const saveStatus = document.getElementById('saveStatus');
+      const toast = document.getElementById('toast');
+      let toastTimer;
+      let saveTimer;
+
+      function showToast(message) {
+        toast.textContent = message;
+        toast.classList.add('show');
+        window.clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(() => toast.classList.remove('show'), 2600);
+      }
+
+      function readSaved() {
+        try {
+          return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+        } catch (_) {
+          return {};
+        }
+      }
+
+      function restoreAnswers() {
+        const saved = readSaved();
+        controls.forEach((control) => {
+          if (Object.prototype.hasOwnProperty.call(saved, control.id)) {
+            control.value = saved[control.id];
+          }
+        });
+      }
+
+      function saveAnswers() {
+        const saved = {};
+        controls.forEach((control) => { saved[control.id] = control.value; });
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+          saveStatus.textContent = 'Сохранено в этом браузере';
+        } catch (_) {
+          saveStatus.textContent = 'Не удалось сохранить в браузере';
+        }
+      }
+
+      function updateProgress() {
+        const answered = controls.filter((control) => control.value.trim() !== '').length;
+        progressText.textContent = `${answered} из ${controls.length}`;
+        progressBar.style.width = `${(answered / controls.length) * 100}%`;
+      }
+
+      function scheduleSave() {
+        saveStatus.textContent = 'Сохраняем…';
+        window.clearTimeout(saveTimer);
+        saveTimer = window.setTimeout(() => {
+          saveAnswers();
+          updateProgress();
+        }, 180);
+      }
+
+      function buildAnswersText() {
+        const lines = ['ОТВЕТЫ К ПЕРВОЙ ВСТРЕЧЕ', ''];
+        const sections = Array.from(form.querySelectorAll('.section'));
+        sections.forEach((section) => {
+          lines.push(section.dataset.section.toUpperCase());
+          section.querySelectorAll('[data-param]').forEach((control) => {
+            const answer = control.value.trim() || 'не заполнено';
+            lines.push(`${control.dataset.param}: ${answer}`);
+          });
+          lines.push('');
+        });
+        return lines.join('\n').trim() + '\n';
+      }
+
+      async function copyAnswers() {
+        const text = buildAnswersText();
+        try {
+          await navigator.clipboard.writeText(text);
+          showToast('Ответы скопированы');
+        } catch (_) {
+          const helper = document.createElement('textarea');
+          helper.value = text;
+          helper.setAttribute('readonly', '');
+          helper.style.position = 'fixed';
+          helper.style.opacity = '0';
+          document.body.appendChild(helper);
+          helper.select();
+          const copied = document.execCommand('copy');
+          helper.remove();
+          showToast(copied ? 'Ответы скопированы' : 'Не удалось скопировать ответы');
+        }
+      }
+
+      function downloadAnswers() {
+        const blob = new Blob(['\ufeff', buildAnswersText()], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'Ответы клиента.txt';
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+        showToast('Файл с ответами скачан');
+      }
+
+      restoreAnswers();
+      updateProgress();
+      controls.forEach((control) => {
+        control.addEventListener('input', scheduleSave);
+        control.addEventListener('change', scheduleSave);
+      });
+      document.getElementById('copyButton').addEventListener('click', copyAnswers);
+      document.getElementById('downloadButton').addEventListener('click', downloadAnswers);
+
+      window.__questionnaireTest = {
+        storageKey: STORAGE_KEY,
+        controlsCount: controls.length,
+        buildAnswersText,
+        saveAnswers,
+        restoreAnswers,
+      };
+    })();
+  </script>
+</body>
+</html>
