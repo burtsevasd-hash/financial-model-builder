@@ -2,12 +2,14 @@
 
 Write the output in the language of the user's request, including every label on the page.
 
-Start from `templates/interactive-model-sample.html` and the guide `templates/interactive-model-how-to-adapt.md`. Do not write a page from scratch: the sample already carries the engine skeleton, the tabs, the charts, the note and the presentation mode. Its visible text is Russian because it comes from a real project. Rewrite every string in the project language.
+Resolve every canonical artifact and sheet name through `references/language-and-files.md` from the skill root.
+
+For an English project, start from `templates/interactive-model-sample-en.html` and `templates/interactive-model-how-to-adapt-en.md`. For a Russian project, start from `templates/interactive-model-sample-ru.html` and `templates/interactive-model-how-to-adapt-ru.md`. Do not translate the other language's sample at build time.
 
 ## Prompt 6.1. The interactive page
 
 ```
-Using «Financial model» from the project folder, build an interactive model as one HTML page «Interactive model» in the project folder. Start from the sample in the skill: templates/interactive-model-sample.html. Every visible label goes into the language of this project.
+Using «Financial model» from the project folder, build an interactive model as one HTML page «Interactive model» in the project folder. Start from the language-matched sample named above. Every visible label stays in the language of this project.
 
 1. The calculation on the page reproduces the formulas of the Model sheet one to one: the same rows, the same calculation map, the horizon and constants from the parameter sheet. Do not simplify and do not round on the way. Before building the interface, port the calculation row by row and reconcile it against the cached values of the spreadsheet across every month: a difference larger than one unit of currency means a porting error, not rounding.
 2. The user moves only these parameters: [the list from the parameter ranking of step 5, usually six to eight]. Each gets a slider with a range of minus 30 to plus 30 per cent of the base value, a unit label and its influence rank. The scenario switch substitutes the values from the scenario table. A «Reset to base» button. A separate block of headcount steppers if shift cover depends on staffing. Every other parameter is hardwired as a constant.

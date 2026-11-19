@@ -1,6 +1,6 @@
 ---
 name: financial-model-builder
-description: Build a complete financial model for a small business, from the client brief to handover. Covers project passport, input parameters, client questionnaire, market research with sources, unit cost calculation, a formula-driven Excel model with P&L, cash flow and payback, scenarios and sensitivity analysis, a single-file interactive HTML model, an analytical note, a slide deck and a client meeting script. Use when asked to build, review or update a financial model, or to assess feasibility, investment need, break-even or payback for a small or medium business.
+description: Build, audit, or update a complete financial model for a small or medium business in English or Russian. Covers the project passport, input parameters, client questionnaire, sourced market research, unit economics, a formula-driven spreadsheet with P&L, cash flow and payback, scenarios, sensitivity analysis, an interactive model, an analytical note and client handoff. Use for feasibility, funding need, break-even, profitability, cash flow, scenario, payback, and spreadsheet-model review requests.
 ---
 
 # Financial Model Builder
@@ -9,11 +9,11 @@ Work in the project folder the user attached. Start with the file «Project pass
 
 ## Rule 1. Language
 
-Detect the language of the user's request and of the files already in the project folder. Reply in that language. Write every deliverable in that language: file names, sheet names, column headers, table rows, the note, the slide deck, the interactive page.
+This release supports English and Russian. Detect which of these two languages the user is using and keep the whole project in that language: replies, file names, sheet names, column headers, tables, the note, the deck and the interactive page.
 
-These instructions are in English so that anyone can read and adapt them. Nothing in the output has to be English. If the project folder is Russian, the model is Russian. If the client is Brazilian, everything is Portuguese.
+If the request is in another language, say that this release supports English and Russian and ask the user to choose one. Do not claim support for an untested language.
 
-File names below are given in English for reference. Use the project language for the real files, and keep one name per artefact for the whole project.
+File names below are canonical English labels. Resolve every real filename and sheet name through [the bilingual naming map](references/language-and-files.md), and keep the chosen names unchanged for the whole project. This naming rule outranks labels embedded in prompts or templates.
 
 ## Role and rules
 
@@ -44,7 +44,7 @@ Tax rules differ in every country. Nothing about taxes is hardcoded in this skil
 
 A financial model is a hypothesis about a future business, not a trade secret. What needs protecting is not the figures but the person they belong to.
 
-**Never put into a prompt or into a file that leaves the folder:** the client's company or brand name, personal names, phone numbers, email, addresses, tax or registration numbers, bank details, contracts, statements or filings that carry identifiers. If you need figures from such a document, copy the figures into a table without the identifiers.
+**Never repeat in replies, external research queries, or newly created outward-facing files:** the client's company or brand name, personal names, phone numbers, email, addresses, tax or registration numbers, bank details, credentials, contracts, statements or filings that carry identifiers. You may inspect a local source file when the user asks, but extract only the figures needed for the model and redact identifiers in every summary.
 
 **Safe to use freely:** the passport (niche, country, city, format, scale), parameters and their values, the model itself, scenarios, the note and the deck, market data and cost calculations.
 
@@ -67,13 +67,13 @@ After these points, do nothing further until the finance professional answers. S
 
 ## Steps
 
-Prompts are in `prompts`, one file per step. Checklists are in `checklists`. Templates are in `templates`. A finished project is in `example-bakery`.
+Prompts are in `prompts`, one file per step. Checklists are in `checklists`. Language-specific templates are in `templates`. The repository also contains a Russian worked example in `example-bakery`; the public plugin ZIP omits it to keep the install small and avoid treating one business as a universal template.
 
 ### Step 0. Project passport
 
 - **Do.** Read the client brief and fill seven fields: business and format; location including country and region; scale; purpose of the model and its audience; horizon and granularity; currency and tax jurisdiction; what is already known.
 - **Prompt.** `prompts/00-project-passport.md`.
-- **File.** «Project passport» in the project folder. Template: `templates/project-passport.md`.
+- **File.** «Project passport» in the project folder. Template: `templates/project-passport-en.md` for English or `templates/project-passport-ru.md` for Russian.
 - **Checks.** No field invented. Every empty field carries a question that can be forwarded to the client as written. The horizon has a proposed default with a one sentence reason.
 - No stop, but do not start step 1 until the passport is confirmed.
 
@@ -81,7 +81,7 @@ Prompts are in `prompts`, one file per step. Checklists are in `checklists`. Tem
 
 - **Do.** Draft a wide parameter list across eight blocks, run it past a reviewer, apply the edits, mark the mandatory ones, then build a questionnaire for the client.
 - **Prompts.** `prompts/01-parameters.md`: 1.1 wide list, 1.2 reviewer, 1.3 edits and file, 1.4 questionnaire.
-- **Files.** «Parameters» spreadsheet and «Client questions» page. Template: `templates/parameters-structure.xlsx`.
+- **Files.** «Parameters» spreadsheet and «Client questions» page. Template: `templates/parameters-structure-en.xlsx` for English or `templates/parameters-structure-ru.xlsx` for Russian.
 - **Checks.** Critical reading checklist and the file checklist.
 - **STOP 1.** Show the list and wait. Build the questionnaire only against a confirmed list.
 
@@ -105,7 +105,7 @@ Prompts are in `prompts`, one file per step. Checklists are in `checklists`. Tem
 
 - **Do.** Propose the structure, build the calculation map, assemble the file on formulas, run the stress test.
 - **Prompts.** `prompts/04-model.md`: 4.1 structure, 4.2 calculation map, 4.3 build, 4.4 fixes and self check.
-- **File.** «Financial model» with three sheets: Parameters, Model, Scenarios. Template: `templates/model-structure.md`.
+- **File.** «Financial model» with three sheets: Parameters, Model, Scenarios. Template: `templates/model-structure-en.md` for English or `templates/model-structure-ru.md` for Russian.
 - **Checks.** Model checklist. Stress test: double the main driver, horizon 24 and 36 months, switch the scenario.
 - **STOP 4.** After the structure, show the skeleton as a table and wait. Not a single formula before it is confirmed.
 - **STOP 5.** After the build, report on every check and wait.
@@ -123,7 +123,7 @@ Prompts are in `prompts`, one file per step. Checklists are in `checklists`. Tem
 - **Do.** Build one HTML page that reproduces the spreadsheet calculation, reconcile it against the spreadsheet, add the note and the presentation mode.
 - **Prompts.** `prompts/06-interactive-model.md`: 6.1 the page, 6.2 reconciliation, 6.3 note and presentation.
 - **Files.** «Interactive model» page, «Reconciliation» spreadsheet.
-- **Sample.** `templates/interactive-model-sample.html` with the guide `templates/interactive-model-how-to-adapt.md`. Start from the sample instead of writing a page from scratch. Its visible text is in Russian because it comes from a real project: rewrite every string in the project language.
+- **Sample.** Use `templates/interactive-model-sample-en.html` with `templates/interactive-model-how-to-adapt-en.md` for English, or `templates/interactive-model-sample-ru.html` with `templates/interactive-model-how-to-adapt-ru.md` for Russian. Start from the matching sample instead of translating the other language at build time.
 - **Checks.** Pre-send checklist. Reconciliation to the last unit of currency at five points.
 - **STOP 7.** Show the reconciliation table and the set of sliders.
 
@@ -131,11 +131,13 @@ Prompts are in `prompts`, one file per step. Checklists are in `checklists`. Tem
 
 - **Do.** A meeting script for 60 or 90 minutes and 10 to 12 client questions with answers taken from the model.
 - **Prompt.** `prompts/07-handover.md`.
-- **File.** «Meeting script». Note and deck structure: `templates/note-and-deck-structure.md`.
+- **File.** «Meeting script». Note and deck structure: `templates/note-and-deck-structure-en.md` for English or `templates/note-and-deck-structure-ru.md` for Russian.
 - **Checks.** Handover checklist.
 - **STOP 8.** Before anything goes to the client, show the list of files and wait.
 
 ## How to behave
+
+- For a request to review or audit an existing model, read [the audit workflow](references/audit-existing-model.md). Audit read-only by default. Do not rebuild or modify the workbook unless the user explicitly asks for changes.
 
 - Do not start the next step until the current one is closed and its file is in the folder.
 - Never type a number into a calculated cell. Formulas with references to the parameter sheet only.

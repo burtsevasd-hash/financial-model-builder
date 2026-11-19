@@ -2,6 +2,8 @@
 
 Write the output in the language of the user's request.
 
+Resolve every canonical artifact name through `references/language-and-files.md` from the skill root.
+
 ## Prompt 7.1. Meeting script and client questions
 
 ```

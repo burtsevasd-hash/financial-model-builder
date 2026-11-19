@@ -1,6 +1,6 @@
 # Example: a bakery in Kazan, Russia
 
-A finished project produced with this skill. Everything inside is in Russian, because that is the language the client and the analyst worked in. The skill always works in the language of the user, so your own project will look like this in your language.
+A finished project produced with this skill. Everything inside is in Russian, because that is the language the client and the analyst worked in. The first public release supports English and Russian; your own project will use the supported language you select.
 
 The client brief and the client's answers have been removed: they carried personal data.
 

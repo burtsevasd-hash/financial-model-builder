@@ -1,0 +1,60 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "financial-model-builder",
+  "version": "1.0.0",
+  "description": "Build or audit formula-driven financial models for small and medium-sized businesses in English or Russian, including assumptions, sourced market inputs, unit economics, scenarios, sensitivity analysis, and client handoff materials.",
+  "author": {
+    "name": "Sophya Burtseva",
+    "url": "https://github.com/burtsevasd-hash"
+  },
+  "homepage": "https://github.com/burtsevasd-hash/financial-model-builder",
+  "repository": "https://github.com/burtsevasd-hash/financial-model-builder",
+  "license": "MIT",
+  "keywords": [
+    "financial-model",
+    "finance",
+    "excel",
+    "cash-flow",
+    "small-business"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Financial Model Builder",
+        "shortDescription": "Auditable financial models",
+        "longDescription": "Build or audit a small-business financial model in English or Russian. The workflow captures objectives and assumptions, prepares a client questionnaire, researches material market inputs, calculates unit economics, builds a formula-driven spreadsheet, compares scenarios, tests sensitivity, and prepares handoff materials. Results depend on the quality of the inputs and do not replace personalized investment, tax, accounting, or legal advice.",
+        "developerName": "Sophya Burtseva",
+        "category": "Productivity",
+        "capabilities": [
+          "Capture assumptions and sources",
+          "Build formula-driven spreadsheets",
+          "Audit existing financial models",
+          "Compare business scenarios",
+          "Run sensitivity and break-even analysis"
+        ],
+        "websiteURL": "https://github.com/burtsevasd-hash/financial-model-builder",
+        "supportURL": "https://github.com/burtsevasd-hash/financial-model-builder/issues",
+        "privacyPolicyURL": "https://github.com/burtsevasd-hash/financial-model-builder/blob/main/PRIVACY.md",
+        "termsOfServiceURL": "https://github.com/burtsevasd-hash/financial-model-builder/blob/main/LICENSE",
+        "defaultPrompt": [
+          "Build a financial model from my business assumptions.",
+          "Audit my spreadsheet model and identify errors.",
+          "Run scenario and sensitivity analysis for this business."
+        ],
+        "brandColor": "#365314",
+        "brandColorDark": "#BEF264",
+        "composerIcon": "./assets/icon.svg",
+        "logo": "./assets/logo.svg"
+      },
+      "publication": {
+        "release_notes": "Initial bilingual release for building and auditing small-business financial models in English and Russian.",
+        "translations": {
+          "ru-RU": {
+            "subtitle": "Проверяемые финмодели",
+            "description": "Создаёт и проверяет финансовые модели на русском или английском языке: исходные параметры, рыночные допущения, себестоимость, Excel-модель на формулах, сценарии, чувствительность и материалы для передачи заказчику. Результат зависит от качества исходных данных и не заменяет индивидуальную инвестиционную, налоговую, бухгалтерскую или юридическую консультацию."
+          }
+        }
+      }
+    }
+  }
+}

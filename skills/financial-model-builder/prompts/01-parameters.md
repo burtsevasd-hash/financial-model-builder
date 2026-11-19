@@ -2,6 +2,8 @@
 
 Write the output in the language of the user's request.
 
+Resolve every canonical artifact name through `references/language-and-files.md` from the skill root.
+
 The eight blocks: Revenue drivers; Cost of sales; Operating expenses; People; Start-up investment and equipment; Working capital; Taxes and financing; Technical model settings.
 
 ## Prompt 1.1. Wide parameter list

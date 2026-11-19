@@ -2,6 +2,8 @@
 
 Write the output in the language of the user's request.
 
+Resolve every canonical artifact name through `references/language-and-files.md` from the skill root. If the user's message already contains the client brief, use it; ask for a separate brief only when the necessary project context is actually missing.
+
 ## Prompt 0.1. Build the passport from the client brief
 
 ```
@@ -25,4 +27,4 @@ Do this:
 Output the passport as a table: Field | Value | Source (client brief / to clarify / proposed default). Save it to the project folder as «Project passport», named in the language of this project.
 ```
 
-If there is no written brief, ask for it in any form: an email, a call transcript, meeting notes.
+If neither the conversation nor the project folder contains a usable brief, ask for it in any form: an email, a call transcript, or meeting notes.

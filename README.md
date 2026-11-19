@@ -17,9 +17,9 @@ It is a workflow, not a template. Eight steps, 26 prompts, eight checklists, a w
 | 6 | One HTML file the client can open on a phone: sliders, live charts, an analytical note and a presentation mode, reconciled against the spreadsheet to the last unit of currency |
 | 7 | A 60 or 90 minute meeting script and twelve likely client questions answered with figures from the model |
 
-## Language
+## Languages
 
-The skill works in the language of the person using it. These instructions are in English so that anyone can read and adapt them, but nothing in the output has to be English: file names, sheet headers, the note, the deck and the interactive page all come out in the language of the project.
+The first public release supports English and Russian. File names, sheet headers, the note, the deck and the interactive page follow the selected project language. Other languages will be added only after terminology and end-to-end tests pass.
 
 ## Jurisdiction
 
@@ -35,9 +35,9 @@ cp -R financial-model-builder ~/.claude/skills/
 
 The skill is then visible by name and triggers on requests about financial models, feasibility, payback or investment need.
 
-**Codex**
+**Codex, after public release**
 
-Keep the folder anywhere and attach it to the session together with the project folder. First message: «Follow the instructions in SKILL.md from the skill folder. The project folder is attached.»
+Open `/plugins`, find Financial Model Builder, install it, and start a new chat. Codex can then select it automatically for financial-model requests, or you can invoke `$financial-model-builder` explicitly.
 
 **Any other assistant**
 

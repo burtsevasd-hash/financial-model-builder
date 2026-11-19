@@ -2,6 +2,8 @@
 
 Write the output in the language of the user's request. Nothing about taxes is hardcoded: the country and the currency come from the passport.
 
+Resolve every canonical artifact name through `references/language-and-files.md` from the skill root.
+
 ## Prompt 3.1. Market research
 
 ```
